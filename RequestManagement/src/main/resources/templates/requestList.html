@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<style>
+		
+		#listButton{
+				width: 100%;
+			}
+	</style>
+<meta charset="UTF-8">
+<title>依頼管理システム-依頼一覧</title>
+</head>
+<body>
+	<h2>■依頼一覧</h2>
+<!--★表のソート-->
+<div>
+	期間：
+    <button onclick="location.href='/requestList'">すべて</button>
+    <button onclick="location.href='/requestList?period=today'">今日</button>
+    <button onclick="location.href='/requestList?period=week'">一週間</button>
+    <button onclick="location.href='/requestList?period=month'">一か月</button>
+    <button onclick="location.href='/requestList?period=year'">一年</button>
+	<br><br>
+	状態：
+	<button onclick="location.href='/requestList'">すべて</button>
+	    <button onclick="location.href='/requestList?status=active'">制作中</button>
+	    <button onclick="location.href='/requestList?status=completed'">完了</button>
+</div>
+
+<br>
+	
+	
+	
+	
+<!--★表の表示-->
+	<table border="3">
+	    <thead>
+	        <tr>
+	            <th>依頼ID</th>
+	            <th>依頼の種類</th>
+	            <th>詳細</th>
+				<th>キャラ名</th>
+				<th>依頼者</th>
+	            <th>金額</th>
+	            <th>チップ</th>
+				<th>作業時間</th>
+	            <th>受付日</th>
+	            <th>完了日</th>
+	            <th>状態</th>
+				<th>メモ</th>
+				<th>修正</th>
+				<th>作業内容</th>
+	        </tr>
+	    </thead>
+
+	    <tbody>
+			<!--for文の仲間。trの中身を件数の数だけ繰り返す。-->
+	        <tr th:each="request : ${requestList}">
+	            <td th:text="${request.id}"></td>
+	            <td th:text="${request.Kind != null ? request.Kind : '-'}"></td>
+	            <td th:text="${request.KindDetail != null ? request.KindDetail : '-'}"></td>
+				<td th:text="${request.chara != null ? request.chara : '-'}"></td>
+				<td th:text="${request.clientName}"></td>
+	            <td th:text="${request.price} + 'マー'"></td>
+	            <td th:text="${request.tip != null ? request.tip + 'マー' : '-'}"></td>
+	            <td th:text="${request.workTimeDisplay != null ? request.workTimeDisplay : '-'}"></td>
+				<td th:text="${request.receivedDay}"></td>
+	            <td th:text="${request.completedDay}"></td>
+	            <td th:text="${request.status}"></td>
+				<td th:text="${request.memo}"></td>
+				<td><button id="listButton" th:onclick="|location.href='/requestUpdate?id=${request.id}'|">
+					✿</button>
+				</td>
+				<td><button id="listButton" th:onclick="|location.href='/workLogEachList?id=${request.id}'|">
+					☆</button>
+				</td>
+	        </tr>
+	    </tbody>
+	</table>
+	<br>
+	<button id = backButton onclick="location.href='/home'">ホームへ戻る</button>
+</body>
+</html>

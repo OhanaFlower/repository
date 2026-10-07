@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+	<style>
+	#normalButton{
+		font-size: 15px;
+		width: 150px;
+		height: 40px;
+	}
+	
+	#BigButton{
+			font-size: 20px;
+			width: 300px;
+			height: 40px;
+		}
+	</style>
+<meta charset="UTF-8">
+<title>依頼管理システム-個別作業一覧</title>
+</head>
+<body>
+	<h2>■作業一覧</h2>
+	<h3 th:if="${workEditMessage}" th:text="${workEditMessage}" style="background-color:rgb(164, 250, 69); color: rgb(255, 255, 255);"></h3>
+	<h3 th:if="${workDeleteMessage}" th:text="${workDeleteMessage}" style="background-color:rgb(254, 131, 124); color: rgb(255, 255, 255);"></h3>
+	<table border="1">
+
+	<tr>
+	    <th>作業日</th>
+	    <th>作業内容</th>
+	    <th>進捗度</th>
+	    <th>メモ</th>
+		<th>修正</th>
+	</tr>
+
+	<tr th:each="work : ${workLogList}">
+
+	    <td th:text="${work.workDate}"></td>
+
+	    <td th:text="${work.workContents}"></td>
+
+	    <td th:text="${work.progressGain}"></td>
+
+	    <td th:text="${work.memo}"></td>
+
+		<td><button th:onclick="|location.href='/workLogEdit?id=${work.id}'|">
+			✿</button>
+		</td>
+	</tr>
+
+	</table>
+	<br>
+	<button id = BigButton th:onclick="|location.href='/workLogRegister?id=${requestId}'|">作業を登録する</button>
+	<br><br>
+	<button id = normalButton onclick="location.href='/requestList'">依頼一覧</button>
+	<button id = normalButton onclick="location.href='/home'">ホームへ</button>
+	
+<!--idの取得-->
+	
+</body>
+</html>

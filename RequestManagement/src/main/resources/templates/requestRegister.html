@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+	<style>
+/*	ラベルの幅を固定することで間隔を統一*/
+	label {
+	display: inline-block;
+	width: 100px;
+	}
+	
+	#time{
+	    width: 50px;
+	}
+	
+	#checkButton{
+		font-size: 18px;
+			width: 300px;
+			height: 40px;
+	}
+
+	</style>
+	
+<meta charset="UTF-8">
+<title>依頼管理システム-依頼登録画面</title>
+</head>
+<body>
+	<h2>■依頼登録</h2>
+	
+	<div th:if="${message}" th:text="${message}" style="background-color:rgb(251, 255, 87);">
+	</div>
+	
+	<br>
+<form th:action="@{/register/check}" method="post">
+	<!--入力エリア-->
+<!--	valueの式の「?」で非修正時のエラーを抑制。（?前が無くてもエラーにしないでねというお願いの記号）-->
+	<label>依頼の種類</label>
+	<input type="text" name="orderKind" list="kindList" th:value="${requestForm?.orderKind}"><br>
+	<datalist id="kindList">
+	    <option th:each="kind : ${kind}"
+	            th:value="${kind}">
+	</datalist>
+	
+	<label>種類詳細</label>
+	<input type="text" name="orderKindDetail" list="kindDetailList" th:value="${requestForm?.orderKindDetail}"><br>
+	<datalist id="kindDetailList">
+		    <option th:each="kindDetail : ${kindDetail}"
+		            th:value="${kindDetail}">
+	</datalist>
+	
+	<label>キャラ名</label>
+	<input type="text" name="chara" list="charaList" th:value="${requestForm?.chara}"><br>
+	<datalist id="charaList">
+		 <option th:each="chara : ${chara}"
+		         th:value="${chara}">
+	</datalist>
+	
+	<label>料金</label>
+	<input type="number" name="price" th:value="${requestForm?.price}"><br>
+
+	<label>依頼者名</label>
+	<input type="text" name="clientName" list="clientNameList" th:value="${requestForm?.clientName}"><br>
+	<datalist id="clientNameList">
+		 <option th:each="clientName : ${clientName}"
+		         th:value="${clientName}">
+	</datalist>
+	
+	<label>受注日</label>
+	<input type="date" name="receivedDay" th:value="${requestForm?.receivedDay}"><br>
+
+	<label>開始日</label>
+	<input type="date" name="startDay" th:value="${requestForm?.startDay}"><br>
+
+	<label>納期</label>
+	<input type="date" name="deadLine" th:value="${requestForm?.deadLine}"><br>
+
+	<label>メモ</label>
+	<input type="text" name="memo" th:value="${requestForm?.memo}"><br>
+	
+	<br><br>
+
+	<h3>〇"進行中"の依頼を登録する場合、以下も入力して下さい。</h3>
+
+	<label>進捗率</label>
+	<input type="number" name="progress" th:value="${requestForm?.progress}"><br>
+
+	<br><br>
+
+	<h3>〇"過去"の依頼を登録する場合、以下も入力して下さい。</h3>
+
+	<label>完了日</label>
+	<input type="date" name="completedDay" th:value="${requestForm?.completedDay}"><br>
+
+	<label>チップ</label>
+	<input type="number" name="tip" th:value="${requestForm?.tip}"><br>
+
+	
+	<label>作業時間</label>
+    <input type="number" id="time" name="hourTime" th:value="${requestForm?.hourTime}">時間  
+    <input type="number" id="time" name="minuteTime" th:value="${requestForm?.minuteTime}">分<br>
+	
+	<!--更新用：id/状態の受取用-->
+	<input type="hidden" name="id" th:value="${requestForm?.id}">
+	<input type="hidden" name="status" th:value="${requestForm?.status}">
+	<!--削除確認用-->
+	<input type="hidden" name="deleteConfirm" th:value="${deleteConfirm}">
+	<br>
+	
+	<!--確認ボタン-->
+	<button id=checkButton 
+			type="submit"
+			th:if="${requestForm?.id == null}">
+			登録確認画面へ
+	</button>
+	
+	<!--★更新時のみ表示＆置き換え-->
+	<button id=checkButton
+			type="submit" 
+			th:if="${requestForm?.id != null}">
+			修正内容確認画面へ
+		</button>
+	<br><br>
+	<button type="submit" 
+				th:if="${requestForm?.id != null}"
+				th:formaction="@{/register/delete}">
+				依頼削除
+	</button>
+</form>
+</body>
+</html>

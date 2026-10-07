@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table border="1">
+	    <tr>
+	        <th>依頼ID</th>
+	        <th>依頼の種類</th>
+	        <th>種類の詳細</th>
+	        <th>依頼者</th>
+	        <th>作業日</th>
+	        <th>作業内容</th>
+	        <th>進捗度</th>
+	        <th>メモ</th>
+	        <th>修正</th>
+	    </tr>
+
+	    <tr th:each="work : ${workLogAllList}">
+	        <td th:text="${work.requestId}"></td>
+	        <td th:text="${work.kind}"></td>
+	        <td th:text="${work.kindDetail}"></td>
+	        <td th:text="${work.clientName}"></td>
+	        <td th:text="${work.workDate}"></td>
+	        <td th:text="${work.workContents}"></td>
+	        <td th:text="${work.progressGain}"></td>
+	        <td th:text="${work.memo}"></td>
+
+	        <td><button th:onclick="|location.href='/workLogEdit?id=${work.id}'|">
+				✿</button></td>
+	    </tr>
+	</table>
+	<br><br>
+	<button onclick="location.href='/home'">ホームに戻る</button>
+</body>
+</html>

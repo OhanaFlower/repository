@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+	<style>
+	label {
+		   display: inline-block;
+		   width: 100px;
+	}
+	
+	#wide{
+	    height: 50px;
+		width: 163px;
+	}
+	</style>
+<meta charset="UTF-8">
+<title>依頼管理システム-作業ログ修正</title>
+</head>
+<body>
+	<p2>■作業ログの修正</p2>
+	
+	<div th:if="${message}" th:text="${message}" style="background-color:rgb(251, 255, 87);">
+	</div>
+	
+	<form th:action="@{/workLogEdit/save}" 
+		  th:object="${workLogForm}" 
+		  method="post">
+
+	    <div>
+	        <label>依頼ID</label>
+	        <input type="number" th:field="*{requestId}">
+	    </div>
+
+	    <div>
+	        <label>作業日</label>
+	        <input type="date" 
+			       name="workDate"
+				   th:value="*{workDate}">
+	    </div>
+
+	    <div>
+	        <label>作業内容</label>
+	        <textarea th:field="*{workContents}"></textarea>
+	    </div>
+
+	    <div>
+	        <label>進捗増加度</label>
+	        <input type="number" th:field="*{progressGain}">
+	    </div>
+
+	    <div>
+	        <label>メモ</label>
+	        <textarea id="wide" th:field="*{memo}"></textarea>
+	    </div>
+
+	    <button type="submit">保存</button>
+
+	<!--追加-->
+		<input type="hidden" th:field="*{id}">
+		
+		<input type="hidden" 
+		       name="deleteConfirm" 
+			   th:value="${deleteConfirm != null ? deleteConfirm : false}">
+		<button type="submit" 
+				th:if="${workLogForm.workDate != null}"
+				th:formaction="@{/workLogEdit/delete}">
+				作業ログ削除
+		</button>
+	</form>
+
+</body>
+</html>

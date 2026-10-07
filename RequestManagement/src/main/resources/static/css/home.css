@@ -1,0 +1,10 @@
+@charset "UTF-8";@charset "UTF-8";
+
+.deadline-warning {
+    background-color: rgb(240, 253, 87);
+}
+
+.deadline-danger {
+    color: rgb(230, 0, 0);
+	background-color: rgb(240, 253, 87);
+}

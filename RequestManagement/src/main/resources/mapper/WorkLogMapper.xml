@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--↑mybatisを動かすためのコード　xml宣言は必ず先頭。コメントもだめ。-->
+
+<!--マッパーを動かすためのコード-->
+<mapper namespace="com.example.demo.mapper.WorkLogMapper">
+
+<!--①【登録用】INSERT文
+	②【表示用】SELECT文：IDを指定して表を取得（依頼ごとの表示用）
+	③【表示用】SELECT文：全ての作業一覧を表示
+	④【表示用】SELECT文：修正時使用。IDに対応した一件の作業履歴を取得
+	⑤【取得用】SELECT文：修正時使用。更新前の進捗度を取得。
+	⑥【削除用】DELETE文：作業ログ削除（1件）
+	-->
+
+
+
+
+<!--【登録用】INSERT文-->
+<insert id="insert">
+	<!--代入先のSQLの列名-->
+    INSERT INTO WORK_LOG (
+     REQUEST_ID,
+     WORK_DATE,
+     WORK_CONTENTS,
+     PROGRESS_GAIN,
+     MEMO
+    )
+    
+    VALUES 
+    (
+	 #{requestId},
+	 #{workDate},
+	 #{workContents},
+	 #{progressGain},
+	 #{memo}
+    )
+</insert>
+
+
+<!--②【表示用】SELECT文：IDを指定して表を取得（依頼ごとの表示用)-->
+<select id="selectByRequestId"
+        resultType="com.example.demo.dto.WorkLogDto">
+
+    SELECT
+        ID,
+        REQUEST_ID,
+        WORK_DATE,
+        WORK_CONTENTS,
+        PROGRESS_GAIN,
+        MEMO
+    FROM WORK_LOG
+    WHERE REQUEST_ID = #{requestId}
+    ORDER BY WORK_DATE DESC
+
+</select>
+
+
+
+<!--③【表示用】SELECT文：全ての作業一覧を表示-->
+<select id="selectAllWorkLogs"
+        resultType="com.example.demo.dto.WorkLogListDto">
+
+    SELECT
+        R.ID AS request_id,
+        R.KIND AS kind,
+        R.KIND_DETAIL AS kind_detail,
+        R.CLIENT_NAME AS client_name,
+        W.ID AS id,
+        W.WORK_DATE AS work_date,
+        W.WORK_CONTENTS AS work_contents,
+        W.PROGRESS_GAIN AS progress_gain,
+        W.MEMO AS memo
+
+    FROM REQUESTS R
+
+    INNER JOIN WORK_LOG W
+        ON R.ID = W.REQUEST_ID
+
+    ORDER BY W.WORK_DATE DESC
+
+</select>
+
+
+<!--④【表示用】SELECT文：修正時使用。IDに対応した一件の作業履歴を取得-->
+<select id="selectById"
+         resultType="com.example.demo.form.WorkLogForm">
+
+    SELECT
+        REQUEST_ID,
+        WORK_DATE AS workDate,
+        WORK_CONTENTS,
+        PROGRESS_GAIN,
+        MEMO,
+        ID
+    FROM WORK_LOG
+    WHERE ID = #{id}
+
+</select>
+
+
+<!--⑤【取得用】SELECT文：修正時使用。更新前の進捗度を取得。-->
+<update id="update">
+    UPDATE WORK_LOG
+    SET
+        REQUEST_ID = #{requestId},
+        WORK_DATE = #{workDate},
+        WORK_CONTENTS = #{workContents},
+        PROGRESS_GAIN = #{progressGain},
+        MEMO = #{memo}
+        
+    WHERE ID = #{id}
+</update>
+
+<!--⑥【削除用】DELETE文：作業ログ削除（1件）-->
+<delete id="deleteById">
+    DELETE FROM WORK_LOG
+    WHERE ID = #{id}
+</delete>
+
+
+</mapper>

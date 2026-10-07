@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+	<link rel="stylesheet" th:href="@{/css/home.css}">
+	<style>
+	/*	ラベルの幅を固定することで間隔を統一*/
+	label {
+	display: inline-block;
+	width: 100px;
+	}
+	
+	#bigButton{
+		font-size: 25px;
+				width: 675px;
+				height: 60px;
+	}
+				
+	#registerButton{
+		font-size: 20px;
+		width: 330px;
+		height: 45px;
+	}
+	
+	#listButton{
+		width: 100%;
+	}
+	
+	
+	
+	
+	</style>
+<meta charset="UTF-8">
+
+<title>依頼管理システム-ホーム</title>
+</head>
+<body>
+	<h2>依頼管理システム-ホーム</h2>
+	<!--▼ここにフラッシュメッセージを表示-->
+	<h3 th:if="${message}" th:text="${message}" style="background-color:rgb(47, 208, 152); color: rgb(255, 255, 255);"></h3>
+	<h3 th:if="${workMessage}" th:text="${workMessage}" style="background-color:rgb(239, 244, 47); color: rgb(255, 255, 255);"></h3>
+	<h3 th:if="${updateMessage}" th:text="${updateMessage}" style="background-color:rgb(164, 250, 69); color: rgb(255, 255, 255);"></h3>
+	<h3 th:if="${deleteMessage}" th:text="${deleteMessage}" style="background-color:rgb(254, 131, 124); color: rgb(255, 255, 255);"></h3>
+	
+	
+	<!--一覧表示-->
+	<p>依頼完了件数：<span th:text="${summary.completedCount}"></span>件
+	   (＋進行中：<span th:text="${summary.inProgressCount}"></span>件)</p>
+	<p>合計金額：<span th:text="${summary.totalPrice + summary.totalTip}"></span>マー
+	  (報酬：<span th:text="${summary.totalPrice}"></span>マー
+	   +チップ：<span th:text="${summary.totalTip}"></span>マー)</p>
+	<p>作業時間合計：<span th:text="${summary.workTimeDisplay}"></span></p>
+	
+    
+	<!--ボタン-->
+	<br>
+	<button id = bigButton onclick="location.href='/register'">依頼登録</button><br><br>
+	<div style="display: flex; gap: 15px;">
+	<button id = registerButton onclick="location.href='/requestList'">依頼一覧</button>
+	<button id = registerButton onclick="location.href='/workLogAllList'">作業内容一覧</button>
+	</div>
+	
+	
+	<!--表-->
+	<br>
+	<h3>✿進行中の依頼</h3>
+	<table border="3">
+		    <thead>
+		        <tr>
+		            <th>依頼ID</th>
+		            <th>残り日数</th>
+		            <th>依頼の種類</th>
+			        <th>詳細</th>
+			        <th>キャラ名</th>
+		            <th>依頼者</th>
+					<th>報酬</th>
+		            <th>進捗</th>
+					<th>作業登録</th>	
+					<th>作業一覧</th>		     
+                </tr>
+		    </thead>
+
+		    <tbody>
+				<!--for文の仲間。trの中身を件数の数だけ繰り返す。-->
+		        <tdtr th:each="request : ${requestList}" th:if="${request.status != '完了'}">
+		            <td th:text="${request.id}"></td>
+					<td th:text="${request.remainingDays != null ? request.remainingDays : '-'}"
+					    th:class="${request.remainingDays != null and request.remainingDays < 7 ? 'deadline-warning deadline-danger' :
+					               (request.remainingDays != null and request.remainingDays < 14 ? 'deadline-warning' : '')}">
+					</td>
+		            <td th:text="${request.Kind != null ? request.Kind : '-'}"></td>
+		            <td th:text="${request.KindDetail != null ? request.KindDetail : '-'}"></td>
+					<td th:text="${request.chara != null ? request.chara : '-'}"></td>
+					<td th:text="${request.clientName}"></td>
+		            <td th:text="${request.price} + 'マー'"></td>
+					<td th:text="${request.progress} + '%'"></td>
+					<td><button id="listButton" th:onclick="|location.href='/workLogRegister?id=${request.id}'|">
+						★</button>
+					</td>
+					<td><button id="listButton" th:onclick="|location.href='/workLogEachList?id=${request.id}'|">
+					    ☆
+					</button>
+					</td>
+		        </tr>
+		    </tbody>
+		</table>
+	
+</body>
+</html>

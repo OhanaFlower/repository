@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--↑mybatisを動かすためのコード　xml宣言は必ず先頭。コメントもだめ。-->
+<!--マッパーを動かすためのコード-->
+<mapper namespace="com.example.demo.mapper.RequestMapper">
+
+<!--
+①【登録用】INSERT文：依頼登録
+②【表示用】SELECT文：総計をhome等に表示
+③【表示用】SELECT文：REQUESTSテーブルを全て表示
+④【表示用】SELECT文：REQUESTテーブルの過去の入力を表示
+⑤【表示用】SELECT文：IDを指定して依頼を一件取得（更新用）
+⑥【確認用】SELECT文：登録依頼が過去とダブってないかチェック
+⑦【更新用】UPDATE文：チェックボックスでstatusを「完了」に
+⑧【更新用】UPDATE文：依頼登録内容を更新
+⑨【更新用】UPDATE文：作業ログ登録時、進捗度をREQUESTSテーブルに加算
+⑩【削除用】DELETE文：依頼内容を削除
+-->
+
+
+<!--①【登録用】INSERT文-->
+<insert id="insert">
+	<!--代入先のSQLの列名-->
+    INSERT INTO REQUESTS (
+     KIND,
+     KIND_DETAIL,
+     CHARA,
+	 PRICE,
+	 CLIENT_NAME,
+	 RECEIVED_DAY,
+	 START_DAY, 
+	 DEADLINE,
+	 PROGRESS,
+ 	 COMPLETED_DAY,
+ 	 TIP,
+ 	 TOTAL_WORK_TIME,
+	 STATUS,
+	 MEMO
+    )
+    
+    VALUES 
+    (
+	 	#{orderKind},
+		#{orderKindDetail},
+		#{chara},
+		#{price},
+		#{clientName},
+		#{receivedDay},
+		#{startDay},
+		#{deadLine},
+		#{progress},
+		#{completedDay},
+		#{tip},
+		#{totalWorkTime},
+		#{status},
+		#{memo}
+    
+    )
+</insert>
+
+<!--②【表示用】SELECT文-->
+<select id="selectSummary" 
+         resultType="com.example.demo.dto.RequestSummaryDto">
+	<!-- 依頼完了件数：-->
+<!--	SELECT COUNT(STATUS) FROM REQUESTS-->
+<!--	WHERE STATUS = '完了';-->
+<!--    進行中：-->
+<!--	SELECT COUNT(STATUS) FROM REQUESTS-->
+<!--	WHERE STATUS IN('制作中', '開始前');-->
+<!--    合計金額：-->
+<!--	SELECT SUM(PRICE) FROM REQUESTS;-->
+<!--    チップ総額：-->
+<!--	SELECT SUM(TIP) FROM REQUESTS;-->
+<!--    作業時間合計：-->
+<!--	SELECT SUM(TOTAL_WORK_TIME) FROM REQUESTS;-->
+
+<!--	☆COALESCEとは：指定したやつ（左）が値を返せばそれを、返さなければ右を使う。
+　　　　今回はnull防止用に設置。COUNTはこれなしで0勝手に入れるので不要。-->
+	SELECT
+	    COUNT(STATUS) FILTER (WHERE STATUS = '完了') AS completed_count,
+	    COUNT(STATUS) FILTER (WHERE STATUS IN ('制作中', '開始前')) AS in_progress_count,
+	    COALESCE(SUM(PRICE) FILTER (WHERE STATUS = '完了'), 0) AS total_price,
+        COALESCE(SUM(TIP) FILTER (WHERE STATUS = '完了'), 0) AS total_tip,
+        COALESCE(SUM(TOTAL_WORK_TIME), 0) AS total_work_time
+	FROM REQUESTS;
+  
+</select>
+
+
+<!--③【表示用】SELECT文：REQUESTSテーブルを全て表示-->
+<select id="selectAllRequests"
+        resultType="com.example.demo.dto.RequestListDto">
+
+    SELECT
+        ID,
+        KIND,
+        KIND_DETAIL,
+        PRICE,
+        TIP,
+        CLIENT_NAME,
+        CHARA,
+        RECEIVED_DAY,
+        DEADLINE,
+        PROGRESS,
+        COMPLETED_DAY,
+        STATUS,
+        TOTAL_WORK_TIME,
+        MEMO
+    FROM REQUESTS
+    
+    
+	<!--ここからソート用-->
+	<where>
+	<!--①状態: activeかcompletedで受け取って、範囲を指定-->
+	<if test="status == 'active'">
+		STATUS IN ('開始前', '制作中')
+	</if>
+	
+	 <if test="status == 'completed'">
+         STATUS = '完了'
+	</if>
+	
+	
+	<!--②期間 受け取ったもので範囲を指定-->
+ 	<if test="period == 'today'">
+        CASE
+            WHEN STATUS = '完了' THEN COMPLETED_DAY
+            WHEN STATUS = '制作中' THEN START_DAY
+            WHEN STATUS = '開始前' THEN RECEIVED_DAY
+        END >= CURRENT_DATE
+    </if>
+
+    <if test="period == 'week'">
+        CASE
+           WHEN STATUS = '完了' THEN COMPLETED_DAY
+           WHEN STATUS = '制作中' THEN START_DAY
+           WHEN STATUS = '開始前' THEN RECEIVED_DAY
+        END >= CURRENT_DATE - INTERVAL '6 days'
+    </if>
+
+    <if test="period == 'month'">
+       CASE
+            WHEN STATUS = '完了' THEN COMPLETED_DAY
+            WHEN STATUS = '制作中' THEN START_DAY
+            WHEN STATUS = '開始前' THEN RECEIVED_DAY
+        END >= CURRENT_DATE - INTERVAL '29 days'
+    </if>
+
+    <if test="period == 'year'">
+        CASE
+            WHEN STATUS = '完了' THEN COMPLETED_DAY
+            WHEN STATUS = '制作中' THEN START_DAY
+            WHEN STATUS = '開始前' THEN RECEIVED_DAY
+        END >= CURRENT_DATE - INTERVAL '364 days'
+    </if>
+    
+	</where>
+	
+	
+    ORDER BY RECEIVED_DAY DESC
+
+</select>
+
+
+<!--④【表示用】SELECT文：REQUESTテーブルの過去の入力を表示-->
+<select id="selectKind" resultType="String">
+    SELECT DISTINCT KIND
+    FROM REQUESTS
+    WHERE KIND IS NOT NULL
+    ORDER BY KIND
+</select>
+
+<select id="selectKindDetail" resultType="String">
+    SELECT DISTINCT KIND_DETAIL
+    FROM REQUESTS
+    WHERE KIND_DETAIL IS NOT NULL
+    ORDER BY KIND_DETAIL
+</select>
+
+<select id="selectChara" resultType="String">
+    SELECT DISTINCT CHARA
+    FROM REQUESTS
+    WHERE CHARA IS NOT NULL
+    ORDER BY CHARA
+</select>
+
+<select id="selectClientName" resultType="String">
+    SELECT DISTINCT CLIENT_NAME
+    FROM REQUESTS
+    WHERE CLIENT_NAME IS NOT NULL
+    ORDER BY CLIENT_NAME
+</select>
+
+
+<!--⑤【表示用】SELECT文：IDを指定して依頼を一件取得（更新用）-->
+<!-- IDを指定して依頼を1件取得 -->
+<select id="selectById"
+        resultType="com.example.demo.form.RequestForm">
+
+    SELECT
+        ID,
+        KIND AS order_kind,
+        KIND_DETAIL AS order_kind_detail,
+        CHARA AS chara,
+        PRICE,
+        CLIENT_NAME AS clientname,
+        RECEIVED_DAY,
+        START_DAY,
+        DEADLINE,
+        PROGRESS,
+        COMPLETED_DAY,
+        TIP,
+        TOTAL_WORK_TIME,
+        STATUS,
+        MEMO
+    FROM REQUESTS
+    WHERE ID = #{id}
+
+</select>
+
+
+<!--⑥【確認用】SELECT文：登録依頼が過去とダブってないかチェック-->
+<select id="checkPastRequest" resultType="boolean">
+SELECT COUNT(*) >  0
+FROM REQUESTS
+WHERE CLIENT_NAME = #{clientName}
+  AND KIND = #{orderKind}
+  AND RECEIVED_DAY = #{receivedDay}
+  AND PRICE = #{price}
+</select>
+
+
+<!--⑦【更新用】UPDATE文-->
+<update id="updateStatus">
+    UPDATE REQUESTS
+    SET STATUS = #{status}
+    WHERE ID = #{requestId}
+</update>
+
+
+<!--⑧【更新用】UPDATE文：依頼登録内容を更新-->
+<update id="update">
+UPDATE REQUESTS SET 
+		KIND = #{orderKind}, 
+		KIND_DETAIL = #{orderKindDetail}, 
+		CHARA = #{chara}, 
+		PRICE = #{price}, 
+		CLIENT_NAME = #{clientName}, 
+		RECEIVED_DAY = #{receivedDay}, 
+		START_DAY = #{startDay}, 
+		DEADLINE = #{deadLine}, 
+		PROGRESS = #{progress}, 
+		COMPLETED_DAY = #{completedDay}, 
+		TIP = #{tip}, 
+		TOTAL_WORK_TIME = #{totalWorkTime}, 
+		STATUS = #{status}, 
+		MEMO = #{memo} 
+WHERE ID = #{id}
+</update>
+
+
+<!--⑨【更新用】UPDATE文：作業ログ登録時、進捗度をREQUESTSテーブルに加算-->
+<update id="addProgress">
+    UPDATE REQUESTS
+    SET PROGRESS = COALESCE(PROGRESS,0) + #{progressGain}
+    WHERE ID = #{requestId}
+</update>
+
+
+
+<!--⑩【削除用】DELETE文：依頼内容を削除-->
+<delete id="deleteById">
+    DELETE FROM REQUESTS
+    WHERE ID = #{id}
+</delete>
+
+</mapper>

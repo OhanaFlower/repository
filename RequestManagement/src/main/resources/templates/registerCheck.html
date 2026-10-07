@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>依頼管理システム-入力内容確認画面</title>
+<style>
+    label {
+        display: inline-block;
+        width: 100px;
+    }
+	#registerButton {
+		font-size: 25px;
+	    width: 400px;
+	    height: 60px;
+	}
+</style>
+</head>
+<body>
+	 <h2>■入力内容確認</h2> 
+	<!--重複メッセ-->
+	<div th:if="${duplicateWarning}"
+	     style="background-color: rgb(251, 255, 87);">
+	    同日に「依頼者・依頼の種類・料金」が同じデータが登録されています。本当に登録しますか？
+	</div>
+	 
+	<!--登録内容を表示-->
+<!--	※ここでは表示するだけなので後でinputする必要がある-->
+<form method="post">
+	 <h3> 
+		<span th:if="${requestForm.id != null}">
+		    登録内容を修正します</span>
+		<span th:if="${requestForm.id == null and requestForm.status == '開始前'}">
+		    新規依頼を登録します</span>
+		<span th:if="${requestForm.id == null and requestForm.status == '制作中'}">
+		    進行中の依頼を登録します</span>
+		<span th:if="${requestForm.id == null and requestForm.status == '完了'}">
+		    過去の依頼を登録します</span>
+		
+	 </h3>
+	<label>依頼者名：</label>
+	<span th:text="${requestForm.clientName}"></span>
+	<br>
+
+	<label>料金：</label>
+	<span><span th:text="${requestForm.price}"></span>マー</span>
+	<!--チップ-->
+	<span th:if="${requestForm.tip != null}"> ＋<span th:text="${requestForm.tip}"></span>マー（チップ） </span> <br>
+	<label>依頼の種類：</label>
+	
+	<span th:text="${requestForm.orderKind}"></span>
+	<!--依頼の種類詳細-->
+	<span th:if="${!#strings.isEmpty(requestForm.orderKindDetail)}">（<span th:text="${requestForm.orderKindDetail}"></span>）</span> <br>
+	
+	<label th:if="${!#strings.isEmpty(requestForm.chara)}">キャラ名：</label>
+	<span th:if="${requestForm.chara != null}" th:text="${requestForm.chara}"></span>
+	<br th:if="${requestForm.chara != null}">
+	
+	<label>受注日：</label>
+	<span th:text="${requestForm.receivedDay}"></span>
+	<br>
+
+	<label th:if="${!#strings.isEmpty(requestForm.startDay)}">開始日：</label>
+	<span th:if="${requestForm.startDay != null}" th:text="${requestForm.startDay}"></span>
+	<br th:if="${requestForm.startDay != null}">
+
+	<label th:if="${!#strings.isEmpty(requestForm.completedDay)}">完了日：</label>
+	<span th:if="${requestForm.completedDay != null}" th:text="${requestForm.completedDay}"></span>
+	<br th:if="${requestForm.completedDay != null}">
+
+	<label th:if="${requestForm.deadLine != null}">納期：</label>
+	<span th:if="${requestForm.deadLine != null}" th:text="${requestForm.deadLine}"></span>
+	<br th:if="${requestForm.deadLine != null}">
+	
+	<label th:if="${requestForm.progress != null}">進捗度：</label>
+	<span th:if="${requestForm.progress != null}" th:text="${requestForm.progress + '%'}"></span>
+	<br th:if="${requestForm.progress != null}">
+
+	<label th:if="${requestForm.totalWorkTime != null}">作業時間：</label>
+	<span th:if="${requestForm.workTimeDisplay != null}" th:text="${requestForm.workTimeDisplay}"></span>
+	<br th:if="${requestForm.totalWorkTime != null}">
+	
+	<label th:if="${!#strings.isEmpty(requestForm.memo)}">メモ：</label>
+	<span th:if="${requestForm.memo != null}" th:text="${requestForm.memo}"></span>
+	<br th:if="${requestForm.memo != null}">
+	<br>
+	
+	<!--登録内容をインプット（ここで使う用）-->
+	<input type="hidden" name="id" th:value="${requestForm.id}">
+	<input type="hidden" name="orderKind" th:value="${requestForm.orderKind}">
+	<input type="hidden" name="orderKindDetail" th:value="${requestForm.orderKindDetail}">
+	<input type="hidden" name="chara" th:value="${requestForm.chara}">
+	<input type="hidden" name="price" th:value="${requestForm.price}">
+	<input type="hidden" name="clientName" th:value="${requestForm.clientName}">
+	<input type="hidden" name="receivedDay" th:value="${requestForm.receivedDay}">
+	<input type="hidden" name="startDay" th:value="${requestForm.startDay}">
+	<input type="hidden" name="deadLine" th:value="${requestForm.deadLine}">
+	<input type="hidden" name="progress" th:value="${requestForm.progress}">
+	<input type="hidden" name="completedDay" th:value="${requestForm.completedDay}">
+	<input type="hidden" name="tip" th:value="${requestForm.tip}">
+	<input type="hidden" name="totalWorkTime" th:value="${requestForm.totalWorkTime}">
+	<input type="hidden" name="status" th:value="${requestForm.status}">
+	<input type="hidden" name="memo" th:value="${requestForm.memo}">
+
+
+	
+	<!--登録内容をDBへ送信-->
+	<button type="submit" th:formaction="@{/requestRegister}">内容を修正</button>
+	<br><br>
+	<button id="registerButton" type="submit" th:formaction="@{/register/save}">登録</button>
+</form>
+</body>
+</html>

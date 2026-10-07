@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <style>
+	/*ラべルの幅を固定することで間隔を統一*/
+	label {
+	display: inline-block;
+	width: 100px;
+	}
+	</style>
+<meta charset="UTF-8">
+<title>依頼管理システム-作業登録画面</title>
+</head>
+<body>
+	<h2>■作業登録</h2>
+	<div th:if="${message}"
+	     th:text="${message}"
+	     style="background-color:rgb(251, 255, 87);">
+	</div>
+		<br>
+	<form th:action="@{/workLog/save}" method="post">
+		<label>依頼ID</label>
+		<input type="text" name="requestId" th:value="${workLogForm?.requestId}"><br>
+		
+		<label>作業日</label>
+		<input type="date" name="workDate" th:value="${workLogForm?.workDate}"><br>
+		
+		<label>作業内容</label>
+		<input type="text" name="workContents" th:value="${workLogForm?.workContents}"><br>
+		
+		<label>進捗率</label>
+		<input type="number" name="progressGain" th:value="${workLogForm?.progressGain}">
+		（現在<span th:text="${workLogForm?.currentProgress}">0</span>%）
+		<br>
+		
+		<label>メモ</label>
+		<input type="text" name="memo" th:value="${workLogForm?.memo}"><br>
+		
+		<label>作業完了</label>
+		<input type="checkbox" name="completed" value="1">
+
+		<br>
+	<!--登録ボタン-->
+	<button type="submit">登録</button>
+	</form>
+</body>
+</html>
