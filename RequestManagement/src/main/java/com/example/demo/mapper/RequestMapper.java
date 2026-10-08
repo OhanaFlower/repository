@@ -22,6 +22,9 @@ public interface RequestMapper {
 	//④テーブルの「一覧」を取得
 	List<RequestListDto> selectAllRequests(String period, String status);
 	
+	//④'同上。納期順に並べる。
+	List<RequestListDto> selectAllRequestsByDeadline();
+	
 	//⑤テーブルの「過去の入力」を取得
 	//依頼の種類
 	List<String> selectKind();

@@ -8,6 +8,7 @@
 ①【登録用】INSERT文：依頼登録
 ②【表示用】SELECT文：総計をhome等に表示
 ③【表示用】SELECT文：REQUESTSテーブルを全て表示
+③'　　　　　　　　　 同上。home用
 ④【表示用】SELECT文：REQUESTテーブルの過去の入力を表示
 ⑤【表示用】SELECT文：IDを指定して依頼を一件取得（更新用）
 ⑥【確認用】SELECT文：登録依頼が過去とダブってないかチェック
@@ -87,7 +88,7 @@
 </select>
 
 
-<!--③【表示用】SELECT文：REQUESTSテーブルを全て表示-->
+<!--③【表示用】SELECT文：受注日順に、REQUESTSテーブルを全て表示-->
 <select id="selectAllRequests"
         resultType="com.example.demo.dto.RequestListDto">
 
@@ -158,6 +159,33 @@
 	
 	
     ORDER BY RECEIVED_DAY DESC
+
+</select>
+
+
+
+<!--③'【表示用】SELECT文：納期順に、REQUESTSテーブルを全て表示-->
+<select id="selectAllRequestsByDeadline"
+        resultType="com.example.demo.dto.RequestListDto">
+
+    SELECT
+        ID,
+        KIND,
+        KIND_DETAIL,
+        PRICE,
+        TIP,
+        CLIENT_NAME,
+        CHARA,
+        RECEIVED_DAY,
+        DEADLINE,
+        PROGRESS,
+        COMPLETED_DAY,
+        STATUS,
+        TOTAL_WORK_TIME,
+        MEMO
+    FROM REQUESTS
+	
+    ORDER BY DEADLINE ASC
 
 </select>
 

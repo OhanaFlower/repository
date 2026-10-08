@@ -29,6 +29,11 @@ public class RequestService {
 	    return requestMapper.selectAllRequests(period, status);
 	}
   
+  //②'同上。納期順で並べる。
+  public List<RequestListDto> selectAllRequestsByDeadline() {
+	    return requestMapper.selectAllRequestsByDeadline();
+	}
+  
   //③依頼登録時、入力項目を表示する用
   public List<String> selectKind() {
 	    return requestMapper.selectKind();

@@ -32,7 +32,7 @@ public class HomeController {
 		 //表示したいDtoを宣言
 		 RequestSummaryDto summary = requestService.selectSummary();
 		 List<RequestListDto> requestList =
-		            requestService.selectAllRequests(null, null);
+		            requestService.selectAllRequestsByDeadline();
 		 
 		 
 		 //表示したいDtoをmodelに格納
