@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<html>
+
 <head>
 	<link rel="stylesheet" th:href="@{/css/home.css}">
 	<style>
@@ -26,14 +26,14 @@
 		width: 100%;
 	}
 	
-	
-	
-	
 	</style>
 <meta charset="UTF-8">
 
+
 <title>依頼管理システム-ホーム</title>
 </head>
+
+
 <body>
 	<h2>依頼管理システム-ホーム</h2>
 	<!--▼ここにフラッシュメッセージを表示-->
@@ -50,6 +50,16 @@
 	  (報酬：<span th:text="${summary.totalPrice}"></span>マー
 	   +チップ：<span th:text="${summary.totalTip}"></span>マー)</p>
 	<p>作業時間合計：<span th:text="${summary.workTimeDisplay}"></span></p>
+	
+	
+	<!--グラフ表示-->
+	<div>
+	    <h2>月別集計</h2>
+
+		<div>
+			<canvas id="monthlyChart"></canvas>
+
+	</div>
 	
     
 	<!--ボタン-->
@@ -105,5 +115,69 @@
 		    </tbody>
 		</table>
 	
-</body>
+		
+	<!--グラフ用-->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<script th:inline="javascript">
+
+	    const monthlySummary = /*[[${monthlySummary}]]*/ [];
+
+	    const labels = monthlySummary.map(monthly => monthly.month);
+
+	    const totalPrices = monthlySummary.map(monthly => monthly.totalPrice);
+
+	    const completedCounts = monthlySummary.map(monthly => monthly.completedCount);
+
+
+	    new Chart(document.getElementById('monthlyChart'), {
+
+	        type: 'line',
+
+	        data: {
+	            labels: labels,
+
+				datasets: [
+				    {
+				        label: '依頼金額',
+				        data: totalPrices,
+				        yAxisID: 'price',
+				        borderColor: '#ffd700',
+				        backgroundColor: '#ffd700'
+				    },
+				    {
+				        label: '完了件数',
+				        data: completedCounts,
+				        yAxisID: 'count',
+				        borderColor: '#66CCFF',
+				        backgroundColor: '#66CCFF'
+				    }
+				]
+	        },
+
+			options: {
+			    responsive: true,
+
+			    scales: {
+					price: {
+					    type: 'linear',
+					    position: 'left',
+					},
+					count: {
+					    type: 'linear',
+					    position: 'right',
+					    min: 0,
+					    max: 10,
+					    ticks: {
+					        stepSize: 1
+					    }
+					}
+			    }
+			}
+
+	    });
+
+	</script>
+
+	</body>
 </html>

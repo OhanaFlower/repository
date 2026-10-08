@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.MonthlySummaryDto;
 import com.example.demo.dto.RequestListDto;
 import com.example.demo.dto.RequestSummaryDto;
 import com.example.demo.form.RequestForm;
@@ -23,6 +24,11 @@ public class RequestService {
   public RequestSummaryDto selectSummary() {
 	  return requestMapper.selectSummary();
   }
+  //半年の月の金額・完了件数を取得
+  public List<MonthlySummaryDto> getMonthlySummary() {
+	    return requestMapper.selectMonthlySummary();
+	}
+  
   
   //②REQUESTSテーブル表示用
   public List<RequestListDto> selectAllRequests(String period, String status) {

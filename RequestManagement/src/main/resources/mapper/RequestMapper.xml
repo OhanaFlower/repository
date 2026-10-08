@@ -16,6 +16,8 @@
 ⑧【更新用】UPDATE文：依頼登録内容を更新
 ⑨【更新用】UPDATE文：作業ログ登録時、進捗度をREQUESTSテーブルに加算
 ⑩【削除用】DELETE文：依頼内容を削除
+
+⑪【取得用】SELECT文：グラフ使用用。金額と件数を取得。
 -->
 
 
@@ -301,5 +303,30 @@ WHERE ID = #{id}
     DELETE FROM REQUESTS
     WHERE ID = #{id}
 </delete>
+
+
+<!--⑪【取得用】SELECT文：グラフ使用用。金額と件数を取得。-->
+<select id="selectMonthlySummary"
+        resultType="com.example.demo.dto.MonthlySummaryDto">
+
+    SELECT
+        TO_CHAR(month, 'YYYY-MM') AS month,
+        COALESCE(SUM(r.PRICE), 0) AS total_price,
+        COUNT(r.COMPLETED_DAY) AS completed_count
+
+    FROM generate_series(
+        DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '5 months',
+        DATE_TRUNC('month', CURRENT_DATE),
+        INTERVAL '1 month'
+    ) AS month
+
+    LEFT JOIN REQUESTS r
+        ON DATE_TRUNC('month', r.COMPLETED_DAY) = month
+        AND r.STATUS = '完了'
+
+    GROUP BY month
+    ORDER BY month
+
+</select>
 
 </mapper>

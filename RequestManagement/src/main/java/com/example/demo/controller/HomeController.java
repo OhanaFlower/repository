@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.example.demo.dto.MonthlySummaryDto;
 import com.example.demo.dto.RequestListDto;
 import com.example.demo.dto.RequestSummaryDto;
 import com.example.demo.form.RequestForm;
@@ -33,11 +34,15 @@ public class HomeController {
 		 RequestSummaryDto summary = requestService.selectSummary();
 		 List<RequestListDto> requestList =
 		            requestService.selectAllRequestsByDeadline();
-		 
+		 //宣言２：月の依頼数・金額の総計
+		 List<MonthlySummaryDto> monthlySummary =
+			        requestService.getMonthlySummary();
 		 
 		 //表示したいDtoをmodelに格納
 		 model.addAttribute("summary", summary);
 		 model.addAttribute("requestList", requestList);
+		 //（宣言２の分）
+		 model.addAttribute("monthlySummary", monthlySummary);
 		 
 		return "home";
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.demo.dto.MonthlySummaryDto;
 import com.example.demo.dto.RequestListDto;
 import com.example.demo.dto.RequestSummaryDto;
 import com.example.demo.form.RequestForm;
@@ -14,7 +15,11 @@ public interface RequestMapper {
 	void insert(RequestForm form);
 	
 	//②テーブルの総計系のデータを、Mapperから受け取る。
-	RequestSummaryDto selectSummary();
+		RequestSummaryDto selectSummary();
+		
+		//月別データ（金額・依頼完了数）
+		List<MonthlySummaryDto> selectMonthlySummary();
+		
 	
 	//③「状態-status」の更新
 	void updateStatus(Integer requestId, String status);
@@ -49,7 +54,6 @@ public interface RequestMapper {
     
     //⑩削除用：指定IDの依頼を削除
     void deleteById(Integer id);
-    
-    
+
 
 }
