@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -125,10 +126,13 @@ public class WorkLogController {
 	 * 全ての作業一覧を表示
 	 **/
 	@GetMapping("/workLogAllList")
-	public String showWorkLogAllList(Model model) {
+	public String showWorkLogAllList(
+			 @RequestParam(required = false) String period,
+			 @RequestParam(required = false) LocalDate date,
+			 Model model) {
 
 		  List<WorkLogListDto> workLogAllList =
-		          WorkLogService.selectAllWorkLogs();
+		          WorkLogService.selectAllWorkLogs(period,date);
 
 		  model.addAttribute("workLogAllList", workLogAllList);
 

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ public class WorkLogService{
 
 	
 //③作業ログ全件表示（全体）
-	public List<WorkLogListDto> selectAllWorkLogs() {
-	    return WorkLogMapper.selectAllWorkLogs();
+	public List<WorkLogListDto> selectAllWorkLogs(String period, LocalDate date) {
+	    return WorkLogMapper.selectAllWorkLogs(period,date);
 	}
 	
 //④作業ログを一件取得（修正用）

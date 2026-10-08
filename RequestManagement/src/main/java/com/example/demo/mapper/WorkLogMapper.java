@@ -1,5 +1,6 @@
 package com.example.demo.mapper;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -17,7 +18,7 @@ public interface WorkLogMapper {
 	List<WorkLogDto> selectByRequestId(Integer requestId);
 	
 	//③SELECT:作業ログ全件表示
-	public List<WorkLogListDto> selectAllWorkLogs();
+	public List<WorkLogListDto> selectAllWorkLogs(String period, LocalDate date);
 	
 	//④SELECT/修正用：一件取得してidを引き渡す//
 	WorkLogForm selectById(Integer id);

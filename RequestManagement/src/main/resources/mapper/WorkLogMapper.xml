@@ -76,7 +76,29 @@
 
     INNER JOIN WORK_LOG W
         ON R.ID = W.REQUEST_ID
+        
+    <!--ソート用-->
+    <where>
 
+	<!--デフォを一週間に-->
+     <if test="period == null or period == 'week'">
+          W.WORK_DATE >= CURRENT_DATE - INTERVAL '6 days'
+     </if>
+     
+       <if test="period == 'month'">
+           W.WORK_DATE >= CURRENT_DATE - INTERVAL '29 days'
+       </if>
+
+       <if test="period == 'year'">
+           W.WORK_DATE >= CURRENT_DATE - INTERVAL '364 days'
+       </if>
+
+       <if test="period == 'today'">
+           W.WORK_DATE >= CURRENT_DATE
+       </if>
+       
+    </where>
+    
     ORDER BY W.WORK_DATE DESC
 
 </select>

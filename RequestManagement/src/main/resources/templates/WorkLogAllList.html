@@ -3,9 +3,54 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>依頼管理システム-作業ログ一覧</title>
 </head>
 <body>
+	<!--ボタン-->
+	期間：
+
+	<button onclick="location.href='/workLogAllList?period=all'">
+		すべて
+	</button>
+
+	<button onclick="location.href='/workLogAllList?period=year'">
+	    一年以内
+	</button>
+
+	<button onclick="location.href='/workLogAllList?period=month'">
+	    一か月以内
+	</button>
+
+	<button onclick="location.href='/workLogAllList?period=today'">
+	    今日
+	</button>
+
+	<br><br>
+
+	日付：
+
+	<input type="date" id="workDate">
+
+	<button onclick="searchByDate()">
+	    日付で検索
+	</button>
+
+	<script>
+	function searchByDate() {
+
+	    const date = document.getElementById("workDate").value;
+
+	    if (!date) {
+	        return;
+	    }
+
+	    location.href = '/workLogAllList?date=' + date;
+	}
+	</script>
+
+	<br><br>
+	
+	
 	<table border="1">
 	    <tr>
 	        <th>依頼ID</th>
