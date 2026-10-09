@@ -126,41 +126,25 @@
 	
 	<!--②期間 受け取ったもので範囲を指定-->
  	<if test="period == 'today'">
-        CASE
-            WHEN STATUS = '完了' THEN COMPLETED_DAY
-            WHEN STATUS = '制作中' THEN START_DAY
-            WHEN STATUS = '開始前' THEN RECEIVED_DAY
-        END >= CURRENT_DATE
+         COMPLETED_DAY >= CURRENT_DATE
     </if>
 
     <if test="period == 'week'">
-        CASE
-           WHEN STATUS = '完了' THEN COMPLETED_DAY
-           WHEN STATUS = '制作中' THEN START_DAY
-           WHEN STATUS = '開始前' THEN RECEIVED_DAY
-        END >= CURRENT_DATE - INTERVAL '6 days'
+         COMPLETED_DAY >= CURRENT_DATE - INTERVAL '6 days'
     </if>
 
     <if test="period == 'month'">
-       CASE
-            WHEN STATUS = '完了' THEN COMPLETED_DAY
-            WHEN STATUS = '制作中' THEN START_DAY
-            WHEN STATUS = '開始前' THEN RECEIVED_DAY
-        END >= CURRENT_DATE - INTERVAL '29 days'
+         COMPLETED_DAY >= CURRENT_DATE - INTERVAL '29 days'
     </if>
 
     <if test="period == 'year'">
-        CASE
-            WHEN STATUS = '完了' THEN COMPLETED_DAY
-            WHEN STATUS = '制作中' THEN START_DAY
-            WHEN STATUS = '開始前' THEN RECEIVED_DAY
-        END >= CURRENT_DATE - INTERVAL '364 days'
+         COMPLETED_DAY >= CURRENT_DATE - INTERVAL '364 days'
     </if>
     
 	</where>
 	
 	
-    ORDER BY RECEIVED_DAY DESC
+    ORDER BY COMPLETED_DAY DESC NULLS LAST
 
 </select>
 
@@ -315,8 +299,28 @@ WHERE ID = #{id}
         COUNT(r.COMPLETED_DAY) AS completed_count
 
     FROM generate_series(
-        DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '5 months',
+         <choose>
+            <when test="period == '3months'">
+                DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '2 months'
+            </when>
+            <when test="period == '6months'">
+                DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '5 months'
+            </when>
+            <when test="period == 'year'">
+                DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '11 months'
+            </when>
+            <otherwise>
+                (
+                    SELECT DATE_TRUNC('month', MIN(COMPLETED_DAY))
+                    FROM REQUESTS
+                    WHERE STATUS = '完了'
+                      AND COMPLETED_DAY IS NOT NULL
+                )
+            </otherwise>
+        </choose>,
+
         DATE_TRUNC('month', CURRENT_DATE),
+
         INTERVAL '1 month'
     ) AS month
 

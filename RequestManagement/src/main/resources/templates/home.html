@@ -55,12 +55,29 @@
 	<!--グラフ表示-->
 	<div>
 	    <h2>月別集計</h2>
-
-		<div>
-			<canvas id="monthlyChart"></canvas>
-
-	</div>
 	
+		<div style="height: 300px; width:600px;">
+		    <canvas id="monthlyChart"></canvas>
+		</div>
+		
+	<!--ソート用のボタン-->
+		<div style="width: 600px; display: flex; gap: 15px; justify-content: center;">
+		    <button type="button" onclick="location.href='/home?period=all'">
+		        すべて
+		    </button>
+
+		    <button type="button" onclick="location.href='/home?period=3months'">
+		        3か月
+		    </button>
+
+		    <button type="button" onclick="location.href='/home?period=6months'">
+		        半年
+		    </button>
+
+		    <button type="button" onclick="location.href='/home?period=year'">
+		        1年
+		    </button>
+		</div>
     
 	<!--ボタン-->
 	<br>

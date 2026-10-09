@@ -18,7 +18,7 @@ public interface RequestMapper {
 		RequestSummaryDto selectSummary();
 		
 		//月別データ（金額・依頼完了数）
-		List<MonthlySummaryDto> selectMonthlySummary();
+		List<MonthlySummaryDto> selectMonthlySummary(String period);
 		
 	
 	//③「状態-status」の更新

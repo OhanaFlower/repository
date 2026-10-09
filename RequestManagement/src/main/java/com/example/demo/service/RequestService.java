@@ -25,8 +25,8 @@ public class RequestService {
 	  return requestMapper.selectSummary();
   }
   //半年の月の金額・完了件数を取得
-  public List<MonthlySummaryDto> getMonthlySummary() {
-	    return requestMapper.selectMonthlySummary();
+  public List<MonthlySummaryDto> getMonthlySummary(String period) {
+	    return requestMapper.selectMonthlySummary(period);
 	}
   
   
