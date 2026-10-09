@@ -18,6 +18,7 @@
 ⑩【削除用】DELETE文：依頼内容を削除
 
 ⑪【取得用】SELECT文：グラフ使用用。金額と件数を取得。
+⑫【取得用】SELECT文：依頼者リスト取得
 -->
 
 
@@ -123,6 +124,11 @@
          STATUS = '完了'
 	</if>
 	
+	<!-- 新しい検索フォーム：実際の状態名で絞り込み -->
+	<if test="status == '開始前' or status == '制作中' or status == '完了'">
+    STATUS = #{status}
+</if>
+	
 	
 	<!--②期間 受け取ったもので範囲を指定-->
  	<if test="period == 'today'">
@@ -140,6 +146,21 @@
     <if test="period == 'year'">
          COMPLETED_DAY >= CURRENT_DATE - INTERVAL '364 days'
     </if>
+    
+    <!-- 依頼者 -->
+	<if test="clientName != null and clientName != ''">
+    	AND CLIENT_NAME = #{clientName}
+	</if>
+
+	<!-- 依頼種類 -->
+	<if test="kind != null and kind != ''">
+ 	   AND KIND = #{kind}
+	</if>
+
+	<!-- 作業時間（指定分数以上） -->
+	<if test="minWorkTime != null">
+ 	   AND TOTAL_WORK_TIME >= #{minWorkTime}
+	</if>
     
 	</where>
 	
@@ -331,6 +352,16 @@ WHERE ID = #{id}
     GROUP BY month
     ORDER BY month
 
+</select>
+
+
+<!--⑫【取得用】SELECT文：依頼者リスト取得-->
+<select id="selectClientNames" resultType="string">
+    SELECT DISTINCT CLIENT_NAME
+    FROM REQUESTS
+    WHERE CLIENT_NAME IS NOT NULL
+      AND CLIENT_NAME != ''
+    ORDER BY CLIENT_NAME
 </select>
 
 </mapper>

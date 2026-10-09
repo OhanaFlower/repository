@@ -25,7 +25,7 @@ public interface RequestMapper {
 	void updateStatus(Integer requestId, String status);
 	
 	//④テーブルの「一覧」を取得
-	List<RequestListDto> selectAllRequests(String period, String status);
+	List<RequestListDto> selectAllRequests(String period, String status,String clientName, String kind, Integer minWorkTime);
 	
 	//④'同上。納期順に並べる。
 	List<RequestListDto> selectAllRequestsByDeadline();
@@ -54,6 +54,9 @@ public interface RequestMapper {
     
     //⑩削除用：指定IDの依頼を削除
     void deleteById(Integer id);
+    
+    //⑪取得用：依頼者リスト
+    List<String> selectClientNames();
 
 
 }

@@ -31,8 +31,8 @@ public class RequestService {
   
   
   //②REQUESTSテーブル表示用
-  public List<RequestListDto> selectAllRequests(String period, String status) {
-	    return requestMapper.selectAllRequests(period, status);
+  public List<RequestListDto> selectAllRequests(String period, String status,String clientName, String kind, Integer minWorkTime) {
+	    return requestMapper.selectAllRequests(period, status,clientName, kind, minWorkTime);
 	}
   
   //②'同上。納期順で並べる。
@@ -62,5 +62,10 @@ public class RequestService {
   //⑤内容修正用
   public void update(RequestForm form) {
 	    requestMapper.update(form);
+	}
+  
+  //⑥取得用：依頼者一覧取得
+  public List<String> getClientNames() {
+	    return requestMapper.selectClientNames();
 	}
 }

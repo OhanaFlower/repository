@@ -167,11 +167,32 @@ public class RequestController {
 	public String showRequestList(
 			@RequestParam(required = false) String period,
 			@RequestParam(required = false) String status,
+			@RequestParam(required = false) String clientName,
+	        @RequestParam(required = false) String kind,
+	        @RequestParam(required = false) Integer minWorkTime,
 			Model model) {
 		
-	  List<RequestListDto> requestList = requestService.selectAllRequests(period, status);
+	  List<RequestListDto> requestList = requestService.selectAllRequests(
+			  				period, status, clientName, kind, minWorkTime);
+	  
+	 
 	  
 	  model.addAttribute("requestList", requestList);
+	  // 検索フォームの選択肢を取得
+	    model.addAttribute("clientNames", requestService.selectCliantName());
+	    model.addAttribute("kinds", requestService.selectKind());
+	  
+	  // 検索後も選択内容を画面に残す
+	    model.addAttribute("selectedClientName", clientName);
+	    model.addAttribute("selectedKind", kind);
+	    model.addAttribute("selectedStatus", status);
+	    model.addAttribute("minWorkTime", minWorkTime);
+	    model.addAttribute("period", period);
+	    
+	   //依頼者リスト
+	    List<String> clientNames = requestService.getClientNames();
+	    model.addAttribute("clientNames", clientNames);
+	    
 		return "requestList";
 	}
 
