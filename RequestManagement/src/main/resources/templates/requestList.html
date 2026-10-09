@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+	<link rel="stylesheet" th:href="@{/css/SimpleTable.css}">
 	<style>
 		
 		#listButton{
@@ -80,7 +81,7 @@
 	
 	
 <!--★表の表示-->
-	<table border="3">
+	<table>
 	    <thead>
 	        <tr>
 	            <th>依頼ID</th>
@@ -114,7 +115,7 @@
 				<td th:text="${request.receivedDay}"></td>
 	            <td th:text="${request.completedDay}"></td>
 	            <td th:text="${request.status}"></td>
-				<td th:text="${request.memo}"></td>
+				<td class="memo-cell" th:text="${request.memo}"></td>
 				<td><button id="listButton" th:onclick="|location.href='/requestUpdate?id=${request.id}'|">
 					✿</button>
 				</td>

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <html>
 <head>
+	<link rel="stylesheet" th:href="@{/css/SimpleTable.css}">
 	<style>
 	#normalButton{
 		font-size: 15px;
@@ -40,7 +41,7 @@
 
 	    <td th:text="${work.progressGain}"></td>
 
-	    <td th:text="${work.memo}"></td>
+	    <td class="memo-cell" th:text="${work.memo}"></td>
 
 		<td><button th:onclick="|location.href='/workLogEdit?id=${work.id}'|">
 			✿</button>

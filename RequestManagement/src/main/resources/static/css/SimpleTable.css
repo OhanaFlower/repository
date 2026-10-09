@@ -1,0 +1,56 @@
+@charset "UTF-8";
+
+
+/* 表の基本デザイン */
+/* 表の基本デザイン */
+table {
+    width: auto;
+	max-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #ffffff;
+
+    /* 外枠 */
+    border: 1px solid #444444;
+
+    /* 角の丸み */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* 見出し */
+table th {
+    background-color: #f3f3f0;
+    color: #555550;
+    font-weight: 500;
+    text-align: left;
+	padding: 10px 12px;
+	white-space: nowrap;
+    border-bottom: 1px solid #e8e8e4;
+}
+
+/* データ部分 */
+table td {
+    color: #444440;
+	padding: 15px 10px;
+	white-space: nowrap;
+    border-bottom: 1px solid #eeeeea;
+}
+
+/* メモ列だけ折り返す */
+table td.memo-cell {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    min-width: 180px;
+    max-width: 300px;
+}
+
+/* 最後の行だけ下線を消す */
+table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* マウスを乗せた行 */
+table tbody tr:hover {
+    background-color: rgb(185, 255, 218);
+}

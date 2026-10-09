@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <html>
 <head>
+	<link rel="stylesheet" th:href="@{/css/SimpleTable.css}">
 <meta charset="UTF-8">
 <title>依頼管理システム-作業ログ一覧</title>
 </head>
@@ -53,7 +54,7 @@
 	<br><br>
 	
 	
-	<table border="1">
+	<table>
 	    <tr>
 	        <th>依頼ID</th>
 	        <th>依頼の種類</th>
@@ -74,7 +75,7 @@
 	        <td th:text="${work.workDate}"></td>
 	        <td th:text="${work.workContents}"></td>
 	        <td th:text="${work.progressGain}"></td>
-	        <td th:text="${work.memo}"></td>
+	        <td class="memo-cell" th:text="${work.memo}"></td>
 
 	        <td><button th:onclick="|location.href='/workLogEdit?id=${work.id}'|">
 				✿</button></td>
