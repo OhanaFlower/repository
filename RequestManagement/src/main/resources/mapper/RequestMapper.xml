@@ -156,6 +156,10 @@
 	<if test="kind != null and kind != ''">
  	   AND KIND = #{kind}
 	</if>
+	
+	<if test="kindDetail != null and kindDetail != ''">
+       AND KIND_DETAIL = #{kindDetail}
+</if>
 
 	<!-- 作業時間（指定分数以上） -->
 	<if test="minWorkTime != null">

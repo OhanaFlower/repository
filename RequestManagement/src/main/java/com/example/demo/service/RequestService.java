@@ -31,8 +31,9 @@ public class RequestService {
   
   
   //②REQUESTSテーブル表示用
-  public List<RequestListDto> selectAllRequests(String period, String status,String clientName, String kind, Integer minWorkTime) {
-	    return requestMapper.selectAllRequests(period, status,clientName, kind, minWorkTime);
+  public List<RequestListDto> selectAllRequests(String period, String status,String clientName, String kind, 
+		                                        String kindDetail,Integer minWorkTime) {
+	    return requestMapper.selectAllRequests(period, status,clientName, kind,kindDetail, minWorkTime);
 	}
   
   //②'同上。納期順で並べる。

@@ -25,7 +25,8 @@ public interface RequestMapper {
 	void updateStatus(Integer requestId, String status);
 	
 	//④テーブルの「一覧」を取得
-	List<RequestListDto> selectAllRequests(String period, String status,String clientName, String kind, Integer minWorkTime);
+	List<RequestListDto> selectAllRequests(String period, String status,String clientName, String kind, 
+										   String kindDetail,Integer minWorkTime);
 	
 	//④'同上。納期順に並べる。
 	List<RequestListDto> selectAllRequestsByDeadline();
