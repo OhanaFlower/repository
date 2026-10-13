@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    padding: 18px 32px;
+    margin-bottom: 28px;
+    background-color: #f3f3f0;
+    border-bottom: 1px solid #e0e0da;
+}
+
+.app-title {
+    color: #444440;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.app-nav {
+    display: flex;
+    gap: 12px;
+}
+
+.app-nav a {
+    padding: 8px 14px;
+    color: #555550;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.app-nav a:hover {
+    background-color: #ffffff;
+}
