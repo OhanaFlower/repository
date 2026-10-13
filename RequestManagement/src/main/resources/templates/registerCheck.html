@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" th:href="@{/css/header.css}">
 <meta charset="UTF-8">
 <title>依頼管理システム-入力内容確認画面</title>
 <style>
@@ -16,6 +17,8 @@
 </style>
 </head>
 <body>
+	<div th:replace="~{Hedder :: header}"></div>
+	
 	 <h2>■入力内容確認</h2> 
 	<!--重複メッセ-->
 	<div th:if="${duplicateWarning}"

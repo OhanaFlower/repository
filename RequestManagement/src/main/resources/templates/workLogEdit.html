@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<html>
+
 <head>
+	<link rel="stylesheet" th:href="@{/css/header.css}">
 	<style>
 	label {
 		   display: inline-block;
@@ -17,6 +18,8 @@
 <title>依頼管理システム-作業ログ修正</title>
 </head>
 <body>
+	<div th:replace="~{Hedder :: header}"></div>
+	
 	<p2>■作業ログの修正</p2>
 	
 	<div th:if="${message}" th:text="${message}" style="background-color:rgb(251, 255, 87);">
@@ -44,7 +47,7 @@
 	    </div>
 
 	    <div>
-	        <label>進捗増加度</label>
+	        <label>進捗増加率</label>
 	        <input type="number" th:field="*{progressGain}">
 	    </div>
 

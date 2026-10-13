@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<html>
 <head>
+	<link rel="stylesheet" th:href="@{/css/header.css}">
     <style>
 	/*ラべルの幅を固定することで間隔を統一*/
 	label {
@@ -13,6 +13,8 @@
 <title>依頼管理システム-作業登録画面</title>
 </head>
 <body>
+	<div th:replace="~{Hedder :: header}"></div>
+	
 	<h2>■作業登録</h2>
 	<div th:if="${message}"
 	     th:text="${message}"
@@ -29,7 +31,7 @@
 		<label>作業内容</label>
 		<input type="text" name="workContents" th:value="${workLogForm?.workContents}"><br>
 		
-		<label>進捗率</label>
+		<label>進捗増加率</label>
 		<input type="number" name="progressGain" th:value="${workLogForm?.progressGain}">
 		（現在<span th:text="${workLogForm?.currentProgress}">0</span>%）
 		<br>

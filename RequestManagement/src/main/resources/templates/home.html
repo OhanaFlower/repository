@@ -4,6 +4,7 @@
 <head>
 	<link rel="stylesheet" th:href="@{/css/home.css}">
 	<link rel="stylesheet" th:href="@{/css/SimpleTable.css}">
+	<link rel="stylesheet" th:href="@{/css/header.css}">
 	<style>
 	/*	ラベルの幅を固定することで間隔を統一*/
 	label {
@@ -36,33 +37,92 @@
 
 
 <body>
-	<h2>依頼管理システム-ホーム</h2>
+	
+	<div th:replace="~{Hedder :: header}"></div>
+	
+<!--	<h2>■ホーム</h2>-->
 	<!--▼ここにフラッシュメッセージを表示-->
 	<h3 th:if="${message}" th:text="${message}" style="background-color:rgb(47, 208, 152); color: rgb(255, 255, 255);"></h3>
-	<h3 th:if="${workMessage}" th:text="${workMessage}" style="background-color:rgb(239, 244, 47); color: rgb(255, 255, 255);"></h3>
+	<h3 th:if="${workMessage}" th:text="${workMessage}" style="background-color:rgb(249, 206, 9); color: rgb(255, 255, 255);"></h3>
 	<h3 th:if="${updateMessage}" th:text="${updateMessage}" style="background-color:rgb(164, 250, 69); color: rgb(255, 255, 255);"></h3>
 	<h3 th:if="${deleteMessage}" th:text="${deleteMessage}" style="background-color:rgb(254, 131, 124); color: rgb(255, 255, 255);"></h3>
 	
 	
-	<!--一覧表示-->
-	<p>依頼完了件数：<span th:text="${summary.completedCount}"></span>件
-	   (＋進行中：<span th:text="${summary.inProgressCount}"></span>件)</p>
-	<p>合計金額：<span th:text="${summary.totalPrice + summary.totalTip}"></span>マー
-	  (報酬：<span th:text="${summary.totalPrice}"></span>マー
-	   +チップ：<span th:text="${summary.totalTip}"></span>マー)</p>
-	<p>作業時間合計：<span th:text="${summary.workTimeDisplay}"></span></p>
+
+	<!-- 集計表示 -->
+	<div class="summary-container">
+
+	    <!-- ① 依頼完了件数 -->
+	    <div class="summary-item summary-count">
+	        <div class="summary-label">依頼完了件数</div>
+
+	        <div class="summary-value">
+	            <span class="summary-number"
+	                  th:text="${summary.completedCount}"></span>
+	            <span class="summary-unit">件</span>
+	        </div>
+
+	        <div class="summary-note">
+	            ＋進行中：<span th:text="${summary.inProgressCount}"></span>件
+	        </div>
+	    </div>
+
+	    <!-- ② 合計金額 -->
+	    <div class="summary-item summary-price">
+	        <div class="summary-label">合計金額</div>
+
+	        <div class="summary-value">
+	            <span class="summary-number"
+	                  th:text="${#numbers.formatInteger(summary.totalPrice + summary.totalTip, 1, 'COMMA')}"></span>
+	            <span class="summary-unit">マー</span>
+	        </div>
+
+	        <div class="summary-note">
+	            報酬：<span th:text="${#numbers.formatInteger(summary.totalPrice, 1, 'COMMA')}"></span>マー
+	            ＋チップ：<span th:text="${#numbers.formatInteger(summary.totalTip, 1, 'COMMA')}"></span>マー
+	        </div>
+	    </div>
+
+	    <!-- ③ 作業時間合計 -->
+	    <div class="summary-item summary-time">
+	        <div class="summary-label">作業時間合計</div>
+
+	        <div class="summary-value">
+	            <span class="summary-number"
+	                  th:text="${summary.totalWorkTime / 60}"></span>
+	            <span class="summary-unit">h</span>
+
+	            <span class="summary-number"
+	                  th:text="${summary.totalWorkTime % 60}"></span>
+	            <span class="summary-unit">m</span>
+	        </div>
+	    </div>
+
+	</div>
+
+	
+	
+	
+	
+<!--▼CSS抜きの表示ver-->
+<!--	<p>依頼完了件数：<span th:text="${summary.completedCount}"></span>件-->
+<!--	   (＋進行中：<span th:text="${summary.inProgressCount}"></span>件)</p>-->
+<!--	<p>合計金額：<span th:text="${summary.totalPrice + summary.totalTip}"></span>マー-->
+<!--	  (報酬：<span th:text="${summary.totalPrice}"></span>マー-->
+<!--	   +チップ：<span th:text="${summary.totalTip}"></span>マー)</p>-->
+<!--	<p>作業時間合計：<span th:text="${summary.workTimeDisplay}"></span></p>-->
 	
 	
 	<!--グラフ表示-->
 	<div>
 	    <h2>月別集計</h2>
 	
-		<div style="height: 300px; width:600px;">
+		<div style="position: relative; height: 200px; width: 920px;">
 		    <canvas id="monthlyChart"></canvas>
 		</div>
 		
 	<!--ソート用のボタン-->
-		<div style="width: 600px; display: flex; gap: 15px; justify-content: center;">
+		<div style="width: 920px; display: flex; gap: 15px; justify-content: center;">
 		    <button type="button" onclick="location.href='/home?period=all'">
 		        すべて
 		    </button>
@@ -81,12 +141,12 @@
 		</div>
     
 	<!--ボタン-->
-	<br>
-	<button id = bigButton onclick="location.href='/register'">依頼登録</button><br><br>
-	<div style="display: flex; gap: 15px;">
-	<button id = registerButton onclick="location.href='/requestList'">依頼一覧</button>
-	<button id = registerButton onclick="location.href='/workLogAllList'">作業内容一覧</button>
-	</div>
+<!--	<br>-->
+<!--	<button id = bigButton onclick="location.href='/register'">依頼登録</button><br><br>-->
+<!--	<div style="display: flex; gap: 15px;">-->
+<!--	<button id = registerButton onclick="location.href='/requestList'">依頼一覧</button>-->
+<!--	<button id = registerButton onclick="location.href='/workLogAllList'">作業内容一覧</button>-->
+<!--	</div>-->
 	
 	
 	<!--表-->
@@ -175,6 +235,7 @@
 
 			options: {
 			    responsive: true,
+				maintainAspectRatio: false,
 
 			    scales: {
 					price: {

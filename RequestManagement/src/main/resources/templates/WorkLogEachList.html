@@ -3,6 +3,7 @@
 <html>
 <head>
 	<link rel="stylesheet" th:href="@{/css/SimpleTable.css}">
+	<link rel="stylesheet" th:href="@{/css/header.css}">
 	<style>
 	#normalButton{
 		font-size: 15px;
@@ -20,6 +21,8 @@
 <title>依頼管理システム-個別作業一覧</title>
 </head>
 <body>
+	<div th:replace="~{Hedder :: header}"></div>
+	
 	<h2>■作業一覧</h2>
 	<h3 th:if="${workEditMessage}" th:text="${workEditMessage}" style="background-color:rgb(164, 250, 69); color: rgb(255, 255, 255);"></h3>
 	<h3 th:if="${workDeleteMessage}" th:text="${workDeleteMessage}" style="background-color:rgb(254, 131, 124); color: rgb(255, 255, 255);"></h3>
