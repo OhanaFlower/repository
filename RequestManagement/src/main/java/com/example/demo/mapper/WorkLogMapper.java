@@ -28,4 +28,7 @@ public interface WorkLogMapper {
 
 	//⑥ログの削除(一件)
 	void deleteById(Integer id);
+	
+	//⑥指定したidに対応したログ全件削除
+	int deleteByRequestId(Integer requestId);
 }

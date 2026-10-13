@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.WorkLogListDto;
 import com.example.demo.form.WorkLogForm;
@@ -18,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class WorkLogService{
 
 	private final WorkLogMapper WorkLogMapper;//③用	
-	private final RequestMapper RequestMapper;//⑤用
+	private final RequestMapper requestMapper;//⑤用
 
 	
 //③作業ログ全件表示（全体）
@@ -51,7 +52,7 @@ public class WorkLogService{
 	    WorkLogMapper.update(form);
 
 	    // ⑥ 差分だけ依頼全体の進捗に加算
-	    RequestMapper.addProgress(
+	    requestMapper.addProgress(
 	        form.getRequestId(),
 	        difference
 	    );
@@ -72,7 +73,7 @@ public class WorkLogService{
 	      }
 
 	      // ③ 依頼全体の進捗から、増加量を引く
-	      RequestMapper.addProgress(
+	      requestMapper.addProgress(
 	          form.getRequestId(),
 	          -progressGain
 	      );
@@ -80,6 +81,13 @@ public class WorkLogService{
 	      // ④ 作業ログを削除
 	      WorkLogMapper.deleteById(id);
 	  }
-	
+
+//⑦作業ログの削除（指定箇所全件）
+	  //ログと依頼をまとめて消すため、トランザクションにする。
+	  @Transactional
+	  public void deleteRequest(Integer requestId) {
+	      WorkLogMapper.deleteByRequestId(requestId);
+	      requestMapper.deleteById(requestId);
+	  }
 	
 }

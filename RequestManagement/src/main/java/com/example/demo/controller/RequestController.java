@@ -12,7 +12,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.dto.RequestListDto;
 import com.example.demo.form.RequestForm;
 import com.example.demo.mapper.RequestMapper;
+import com.example.demo.mapper.WorkLogMapper;
 import com.example.demo.service.RequestService;
+import com.example.demo.service.WorkLogService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +26,8 @@ public class RequestController {
 	//☆マッパーを作るたび、ここでfinal宣言する。@Required...にコンストラクタを作らせるため。
 	private final RequestMapper requestMapper;
 	private final RequestService requestService;
-	
+	private final WorkLogMapper WorkLogMapper;//ログ削除用
+	private final WorkLogService WorkLogService;//ログ削除用
 	
 	
 /*【一覧】
@@ -252,9 +255,12 @@ public class RequestController {
 	        return "requestRegister";
 	    }
 
-	    // 2回目
-	    requestMapper.deleteById(form.getId());
-	    
+	 
+	 // 2回目
+	    WorkLogService.deleteRequest(form.getId());
+
+//	    WorkLogMapper.deleteByRequestId(form.getId());
+////	    RequestMapper.deleteById(requestId);
 	    redirectAttributes.addFlashAttribute("deleteMessage", "★依頼を削除しました");
 
 	    return "redirect:/home";

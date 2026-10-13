@@ -223,13 +223,17 @@
 				        borderColor: '#ffd700',
 				        backgroundColor: '#ffd700'
 				    },
-				    {
-				        label: '完了件数',
-				        data: completedCounts,
-				        yAxisID: 'count',
-				        borderColor: '#66CCFF',
-				        backgroundColor: '#66CCFF'
-				    }
+					{
+					    label: '完了件数',
+					    data: completedCounts,
+					    type: 'bar',
+					    backgroundColor: 'rgba(0, 172, 155, 1)',
+					    borderColor: '#00ac9b',
+					    borderWidth: 1,
+					    yAxisID: 'count',
+						barThickness: 20,
+						maxBarThickness: 20,
+					}
 				]
 	        },
 
@@ -246,7 +250,7 @@
 					    type: 'linear',
 					    position: 'right',
 					    min: 0,
-					    max: 10,
+						max: 10,
 					    ticks: {
 					        stepSize: 1
 					    }

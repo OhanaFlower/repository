@@ -11,6 +11,7 @@
 	④【表示用】SELECT文：修正時使用。IDに対応した一件の作業履歴を取得
 	⑤【取得用】SELECT文：修正時使用。更新前の進捗度を取得。
 	⑥【削除用】DELETE文：作業ログ削除（1件）
+	⑦【削除用】DELETE分：対応したidの作業ログ全件削除
 	-->
 
 
@@ -138,6 +139,13 @@
 <delete id="deleteById">
     DELETE FROM WORK_LOG
     WHERE ID = #{id}
+</delete>
+
+
+<!--⑦【削除用】DELETE分：対応したidの作業ログ全件削除-->
+<delete id="deleteByRequestId">
+    DELETE FROM WORK_LOG
+    WHERE REQUEST_ID = #{requestId}
 </delete>
 
 

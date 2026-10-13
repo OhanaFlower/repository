@@ -3,7 +3,6 @@
 .summary-container {
     display: flex;
     align-items: stretch;
-    justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
     margin: 24px 0;
