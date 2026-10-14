@@ -221,21 +221,24 @@
 				datasets: [
 				    {
 				        label: '依頼金額',
+						order: 2,
 				        data: totalPrices,
+						type: 'bar',
 				        yAxisID: 'price',
-				        borderColor: '#ffd700',
-				        backgroundColor: '#ffd700'
+				        borderColor: 'rgb(234, 200, 38)',
+				        backgroundColor:  'rgb(234, 200, 38)',
+						barThickness: 20,
+						maxBarThickness: 20
 				    },
 					{
 					    label: '完了件数',
+						order: 1,
 					    data: completedCounts,
-					    type: 'bar',
-					    backgroundColor: 'rgba(0, 172, 155, 1)',
-					    borderColor: '#00ac9b',
-					    borderWidth: 1,
+					    backgroundColor: '#59b9c6',
+					    borderColor: '#59b9c6',
+					    borderWidth: 3,
 					    yAxisID: 'count',
-						barThickness: 20,
-						maxBarThickness: 20,
+						
 					}
 				]
 	        },
