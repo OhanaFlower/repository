@@ -95,6 +95,9 @@
 	            <span class="summary-number"
 	                  th:text="${summary.totalWorkTime % 60}"></span>
 	            <span class="summary-unit">m</span>
+			</div>
+			<div class="summary-note">
+				時給：<span th:text="${summary.hourlyWage}"></span>マー/h          
 	        </div>
 	    </div>
 

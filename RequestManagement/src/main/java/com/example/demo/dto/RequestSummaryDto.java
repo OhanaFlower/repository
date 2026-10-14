@@ -31,4 +31,20 @@ public String getWorkTimeDisplay() {
 
 	    return hour + "時間" + minute + "分";
 	}
+
+
+public long getHourlyWage() {
+
+    // 作業時間が未入力、または0以下の場合
+    if (totalWorkTime == null || totalWorkTime <= 0) {
+        return 0;
+    }
+
+    // 合計金額と合計チップを足す
+    int totalAmount = totalPrice + totalTip;
+
+    // 時給を計算して四捨五入
+    //※60.0で小数点まで書くことで、小数部分が失われないようにする。
+    return Math.round(totalAmount * 60.0 / totalWorkTime);
+}
 }
