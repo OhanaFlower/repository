@@ -210,7 +210,21 @@
 
 	    const completedCounts = monthlySummary.map(monthly => monthly.completedCount);
 
-
+		
+		// 表示期間に応じて棒の太さを変更
+		const barWidth = labels.length <= 3 ? 80
+		               : labels.length <= 6 ? 60
+					   : labels.length <= 12 ? 40
+					   : labels.length <= 15 ? 35
+					   : labels.length <= 20 ? 30
+					   : labels.length <= 25 ? 25
+					   : labels.length <= 30 ? 20
+					   : labels.length <= 35 ? 15
+					   : labels.length <= 40 ? 10
+					   : labels.length <= 45 ? 5
+		               : 5;
+		
+		
 	    new Chart(document.getElementById('monthlyChart'), {
 
 	        type: 'line',
@@ -227,8 +241,8 @@
 				        yAxisID: 'price',
 				        borderColor: 'rgb(234, 200, 38)',
 				        backgroundColor:  'rgb(234, 200, 38)',
-						barThickness: 20,
-						maxBarThickness: 20
+						barThickness: barWidth,
+						maxBarThickness: barWidth,
 				    },
 					{
 					    label: '完了件数',
