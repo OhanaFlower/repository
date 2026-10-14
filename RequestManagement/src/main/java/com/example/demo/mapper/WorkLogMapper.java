@@ -18,7 +18,7 @@ public interface WorkLogMapper {
 	List<WorkLogDto> selectByRequestId(Integer requestId);
 	
 	//③SELECT:作業ログ全件表示
-	public List<WorkLogListDto> selectAllWorkLogs(String period, LocalDate date);
+	public List<WorkLogListDto> selectAllWorkLogs(String period, LocalDate date, String status);
 	
 	//④SELECT/修正用：一件取得してidを引き渡す//
 	WorkLogForm selectById(Integer id);

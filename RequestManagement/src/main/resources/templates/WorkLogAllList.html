@@ -11,7 +11,6 @@
 	<div th:replace="~{Hedder :: header}"></div>
 	<!--ボタン-->
 	期間：
-
 	<button onclick="location.href='/workLogAllList?period=all'">
 		すべて
 	</button>
@@ -28,32 +27,26 @@
 	    今日
 	</button>
 	<br>
-	※デフォルトは一週間表示
-
-	<br><br>
-
-	日付：
-
-	<input type="date" id="workDate">
-
-	<button onclick="searchByDate()">
-	    日付で検索
+	
+	状態：
+	<button onclick="location.href='/workLogAllList?status=制作中'">
+		制作中
 	</button>
 
-	<script>
-	function searchByDate() {
+	<button onclick="location.href='/workLogAllList?status=完了'">
+		 完了
+	</button>
+	
+	
+<!--ソート内容表示-->
+	<div class="summary-note">
+    	<h3>表示中の内容：<span th:text="${displayCondition}"></span></h3>
+	</div>
+	
 
-	    const date = document.getElementById("workDate").value;
-
-	    if (!date) {
-	        return;
-	    }
-
-	    location.href = '/workLogAllList?date=' + date;
-	}
 	</script>
 
-	<br><br>
+
 	
 	
 	<table>

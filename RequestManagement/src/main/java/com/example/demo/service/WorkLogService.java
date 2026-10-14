@@ -23,8 +23,8 @@ public class WorkLogService{
 
 	
 //③作業ログ全件表示（全体）
-	public List<WorkLogListDto> selectAllWorkLogs(String period, LocalDate date) {
-	    return WorkLogMapper.selectAllWorkLogs(period,date);
+	public List<WorkLogListDto> selectAllWorkLogs(String period, LocalDate date,String status) {
+	    return WorkLogMapper.selectAllWorkLogs(period,date,status);
 	}
 	
 //④作業ログを一件取得（修正用）

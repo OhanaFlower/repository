@@ -199,6 +199,71 @@ public class RequestController {
 	    List<String> clientNames = requestService.getClientNames();
 	    model.addAttribute("clientNames", clientNames);
 	    
+	 // 絞り込み内容を作成して、受け渡しする
+	    String displayCondition;
+
+	    boolean isSearch = 
+	           (clientName != null && !clientName.isBlank())
+	        || (kind != null && !kind.isBlank())
+	        || (kindDetail != null && !kindDetail.isBlank())
+	        || minWorkTime != null;
+
+	    if (isSearch) {
+	        StringBuilder condition = new StringBuilder();
+
+	        if (clientName != null && !clientName.isBlank()) {
+	            condition.append("依頼者：").append(clientName);
+	        }
+
+	        if (kind != null && !kind.isBlank()) {
+	            if (condition.length() > 0) condition.append("、");
+	            condition.append("種類：").append(kind);
+	        }
+
+	        if (kindDetail != null && !kindDetail.isBlank()) {
+	            if (condition.length() > 0) condition.append("、");
+	            condition.append("詳細：").append(kindDetail);
+	        }
+
+	        if (minWorkTime != null) {
+	            if (condition.length() > 0) condition.append("、");
+	            condition.append("作業時間：").append(minWorkTime).append("分以上");
+	        }
+
+	        displayCondition = "検索（" + condition + "）";
+
+	    } else if (status != null && !status.isBlank()) {
+	        String displayStatus;
+
+	        if (status.equals("active")) {
+	            displayStatus = "制作中";
+	        } else if (status.equals("completed")) {
+	            displayStatus = "完了";
+	        } else {
+	            displayStatus = status;
+	        }
+
+	        displayCondition = displayStatus + "・全期間";
+
+	    } else if (period == null || period.equals("week")) {
+	        displayCondition = "直近1週間";
+
+	    } else if (period.equals("month")) {
+	        displayCondition = "直近1か月";
+
+	    } else if (period.equals("year")) {
+	        displayCondition = "直近1年";
+
+	    } else if (period.equals("today")) {
+	        displayCondition = "今日";
+
+	    } else {
+	        displayCondition = "全期間";
+	    }
+
+	    model.addAttribute("displayCondition", displayCondition);
+	    
+	    
 		return "requestList";
 	}
 

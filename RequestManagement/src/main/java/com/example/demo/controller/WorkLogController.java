@@ -129,13 +129,37 @@ public class WorkLogController {
 	public String showWorkLogAllList(
 			 @RequestParam(required = false) String period,
 			 @RequestParam(required = false) LocalDate date,
+			 @RequestParam(required = false) String status,
 			 Model model) {
 
 		  List<WorkLogListDto> workLogAllList =
-		          WorkLogService.selectAllWorkLogs(period,date);
+		          WorkLogService.selectAllWorkLogs(period,date,status);
 
 		  model.addAttribute("workLogAllList", workLogAllList);
+		  //ソート内容保存
+		  model.addAttribute("status", status);
+		  model.addAttribute("period", period);
+		  
+		  //ソート条件文字列を受け渡す
+		  //〇期間＋状態
+		  String displayCondition;
+		  if (status != null && !status.isEmpty()) {
+		      displayCondition = status + "・全期間";
+		  } else if (period == null || period.equals("week")) {
+		      displayCondition = "直近1週間";
+		  } else if (period.equals("month")) {
+		      displayCondition = "直近1か月";
+		  } else if (period.equals("year")) {
+		      displayCondition = "直近1年";
+		  } else if (period.equals("today")) {
+		      displayCondition = "今日";
+		  } else {
+		      displayCondition = "全期間";
+		  }
 
+		  model.addAttribute("displayCondition", displayCondition);
+
+		  
 		  return "workLogAllList";
 		}
 

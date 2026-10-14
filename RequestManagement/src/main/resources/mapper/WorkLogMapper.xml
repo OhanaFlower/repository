@@ -67,6 +67,7 @@
         R.KIND AS kind,
         R.KIND_DETAIL AS kind_detail,
         R.CLIENT_NAME AS client_name,
+        R.STATUS AS status,
         W.ID AS id,
         W.WORK_DATE AS work_date,
         W.WORK_CONTENTS AS work_contents,
@@ -82,7 +83,8 @@
     <where>
 
 	<!--デフォを一週間に-->
-     <if test="period == null or period == 'week'">
+     <if test="(period == null or period == 'week')
+    		   and (status == null or status == '')">
           W.WORK_DATE >= CURRENT_DATE - INTERVAL '6 days'
      </if>
      
@@ -97,6 +99,11 @@
        <if test="period == 'today'">
            W.WORK_DATE >= CURRENT_DATE
        </if>
+       
+	<!--状態で絞り込み   -->
+	<if test="status != null and status != ''">
+   		 AND R.STATUS = #{status}
+	</if>
        
     </where>
     
