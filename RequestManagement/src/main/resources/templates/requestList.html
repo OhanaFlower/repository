@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js">
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 	<link rel="stylesheet" th:href="@{/css/SimpleTable.css}">
 	<link rel="stylesheet" th:href="@{/css/header.css}">
+	<link rel="stylesheet" th:href="@{/css/RequestList.css}">
 	<style>
 		
 		#listButton{
@@ -101,28 +105,129 @@
 			       th:value="${selectedMinWorkTime}">
 			<span>分以上</span>
 
-			<button type="button"
-			        onclick="location.href='/requestList'">
-			    条件をクリア
-			</button>
-			
 			<button id="bigButton",type="submit">検索</button>
+			<button type="button"
+						        onclick="location.href='/requestList'">
+						    条件をクリア
+						</button>
 
 		</form>
 </div>
 
 <!-- 表示内容 -->
-<div class="summary-note">
     <h3>
         表示中の内容：
         <span th:text="${displayCondition}"></span>
     </h3>
 </div>
 
-<br>
 	
-	
-	
+
+
+<!-- 【カード】検索条件に一致する依頼の集計 -->
+<div class="summary-container">
+
+	<!-- ① 依頼完了件数 -->
+		    <div class="summary-item summary-count">
+		        <div class="summary-label">依頼完了件数</div>
+
+		        <div class="summary-value">
+		            <span class="summary-number"
+		                  th:text="${summary.completedCount}"></span>
+		            <span class="summary-unit">件</span>
+		        </div>
+
+		        <div class="summary-note">
+		            ＋進行中：<span th:text="${summary.inProgressCount}"></span>件
+		        </div>
+		    </div>
+
+		    <!-- ② 合計金額 -->
+		    <div class="summary-item summary-price">
+		        <div class="summary-label">合計金額</div>
+
+		        <div class="summary-value">
+		            <span class="summary-number"
+		                  th:text="${#numbers.formatInteger(summary.totalPrice + summary.totalTip, 1, 'COMMA')}"></span>
+		            <span class="summary-unit">マー</span>
+		        </div>
+
+		        <div class="summary-note">
+		            報酬：<span th:text="${#numbers.formatInteger(summary.totalPrice, 1, 'COMMA')}"></span>マー
+		            ＋チップ：<span th:text="${#numbers.formatInteger(summary.totalTip, 1, 'COMMA')}"></span>マー
+		        </div>
+		    </div>
+
+		    <!-- ③ 作業時間合計 -->
+		    <div class="summary-item summary-time">
+		        <div class="summary-label">作業時間合計</div>
+
+		        <div class="summary-value">
+		            <span class="summary-number"
+		                  th:text="${summary.totalWorkTime / 60}"></span>
+		            <span class="summary-unit">h</span>
+
+		            <span class="summary-number"
+		                  th:text="${summary.totalWorkTime % 60}"></span>
+		            <span class="summary-unit">m</span>
+				</div>
+				<div class="summary-note">
+					時給：<span th:text="${summary.hourlyWage}"></span>マー/h          
+		        </div>
+		    </div>
+			
+
+
+			<!-- ④ 平均作業日数 -->
+			<div class="summary-item summary-average-days">
+			    <div class="summary-label">平均作業日数</div>
+
+			    <div class="summary-value">
+			        <span class="summary-number"
+			              th:text="${averageWorkDays != null
+			                  ? #numbers.formatDecimal(averageWorkDays, 1, 1)
+			                  : '-'}"></span>
+			        <span class="summary-unit">日</span>
+			    </div>
+
+			    <div class="summary-note">
+			        開始日～完了日までの平均
+			    </div>
+			</div>
+
+
+
+</div>
+
+<!--【グラフ】円グラフ-->
+	<!-- 円グラフエリア -->
+	<div class="chart-area">
+
+	    <div class="chart-pair">
+	        <div class="chart-item">
+	            <h3>依頼種類ごとの件数割合</h3>
+	            <div class="chart-canvas">
+	                <canvas id="kindCountChart"></canvas>
+	            </div>
+	        </div>
+
+	        <div class="chart-item">
+	            <h3>依頼種類ごとの金額割合</h3>
+	            <div class="chart-canvas">
+	                <canvas id="priceChart"></canvas>
+	            </div>
+	        </div>
+
+	    </div>
+
+	    <!-- 2つのグラフで共通の凡例 -->
+	    <div id="sharedLegend" class="shared-legend"></div>
+
+	</div>
+
+
+
+
 	
 <!--★表の表示-->
 	<table>
@@ -171,5 +276,96 @@
 	</table>
 	<br>
 	<button id = backButton onclick="location.href='/home'">ホームへ戻る</button>
+
+<!--円グラフのデータ・設定部分-->
+
+<script th:inline="javascript">
+    // Controllerから渡されたデータ
+	const kindCountList = /*[[${kindCountList}]]*/ [];
+	const kindPriceList = /*[[${kindPriceList}]]*/ [];
+
+	// 2つのデータに登場する依頼種類をまとめる
+	const kinds = [...new Set([
+	    ...kindCountList.map(item => item.kind ?? '未分類'),
+	    ...kindPriceList.map(item => item.kind ?? '未分類')
+	])];
+
+	// 依頼種類ごとに固定する色
+	const palette = [
+	'#7FA7D8',
+	  '#8FC5AE',
+	  '#E7BD73',
+	  '#D99BA5',
+	  '#B3A0D9',
+	  '#8CBFC5',
+	  '#C5A38A',
+	  '#BDBDBD'
+	];
+
+	const colorMap = Object.fromEntries(
+	    kinds.map((kind, index) => [
+	        kind,
+	        palette[index % palette.length]
+	    ])
+	);
+
+	// 種類の順番を両グラフで統一する
+	const countMap = Object.fromEntries(
+	    kindCountList.map(item => [item.kind ?? '未分類', item.count])
+	);
+
+	const priceMap = Object.fromEntries(
+	    kindPriceList.map(item => [item.kind ?? '未分類', item.totalPrice])
+	);
+
+	const colors = kinds.map(kind => colorMap[kind]);
+
+	const commonOptions = {
+	    responsive: true,
+	    maintainAspectRatio: false,
+	    plugins: {
+	        legend: {
+	            display: false
+	        }
+	    }
+	};
+
+	// 件数の円グラフ
+	new Chart(document.getElementById('kindCountChart'), {
+	    type: 'pie',
+	    data: {
+	        labels: kinds,
+	        datasets: [{
+	            data: kinds.map(kind => countMap[kind] ?? 0),
+	            backgroundColor: colors
+	        }]
+	    },
+	    options: commonOptions
+	});
+
+	// 金額の円グラフ
+	new Chart(document.getElementById('priceChart'), {
+	    type: 'pie',
+	    data: {
+	        labels: kinds,
+	        datasets: [{
+	            data: kinds.map(kind => priceMap[kind] ?? 0),
+	            backgroundColor: colors
+	        }]
+	    },
+	    options: commonOptions
+	});
+
+	// 共通凡例を作成する
+	document.getElementById('sharedLegend').innerHTML =
+	    kinds.map(kind => `
+	        <div class="legend-item">
+	            <span class="legend-color"
+	                  style="background-color: ${colorMap[kind]}"></span>
+	            <span>${kind}</span>
+	        </div>
+	    `).join('');
+</script>
+
 </body>
 </html>

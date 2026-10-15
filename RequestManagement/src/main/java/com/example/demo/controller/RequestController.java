@@ -9,7 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.dto.RequestKindCountDto;
+import com.example.demo.dto.RequestKindPriceDto;
 import com.example.demo.dto.RequestListDto;
+import com.example.demo.dto.RequestPriceDto;
+import com.example.demo.dto.RequestSummaryDto;
 import com.example.demo.form.RequestForm;
 import com.example.demo.mapper.RequestMapper;
 import com.example.demo.mapper.WorkLogMapper;
@@ -176,10 +180,46 @@ public class RequestController {
 	        @RequestParam(required = false) String kindDetail,
 	        Model model) {
 		
+	  // 検索条件に一致する依頼の集計
+	  RequestSummaryDto summary = requestService.selectSummaryByCondition(
+		        period, status, clientName, kind, kindDetail, minWorkTime);
+
+	  model.addAttribute("summary", summary);
+	
+	  //カード用：平均作業日数を取得する
+	  Double averageWorkDays = requestService.selectAverageWorkDaysByCondition(
+	      period, status, clientName, kind, kindDetail, minWorkTime);
+
+	  model.addAttribute("averageWorkDays", averageWorkDays);
+
+	  
+	  //
 	  List<RequestListDto> requestList = requestService.selectAllRequests(
 			  				period, status, clientName, kind, kindDetail,minWorkTime);
 	  
-	 
+
+	   // 円グラフ用：依頼種類ごとの件数
+	   List<RequestKindCountDto> kindCountList =
+	           requestService.selectKindCountByCondition(
+	                  period, status, clientName, kind, kindDetail, minWorkTime);
+
+	   model.addAttribute("kindCountList", kindCountList);
+
+	   // 円グラフ用：依頼1件ごとの金額
+	   List<RequestPriceDto> priceList =
+	           requestService.selectPriceByCondition(
+	                   period, status, clientName, kind, kindDetail, minWorkTime);
+
+	   model.addAttribute("priceList", priceList);
+
+	   
+	   //円グラフ用：依頼種類ごとの金額
+		List<RequestKindPriceDto> kindPriceList =
+		    requestService.selectKindPriceByCondition(
+		        period, status, clientName, kind, kindDetail, minWorkTime);
+		
+		model.addAttribute("kindPriceList", kindPriceList);
+		
 	  
 	  model.addAttribute("requestList", requestList);
 	  // 検索フォームの選択肢を取得

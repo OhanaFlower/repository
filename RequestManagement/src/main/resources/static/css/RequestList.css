@@ -1,0 +1,223 @@
+/*①カードのCSS*/
+/* 集計全体 */
+.summary-container {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 24px 0;
+}
+
+/* 各カード共通 */
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 350px;
+    min-height: 100px;
+    border: 1px solid;
+    border-radius: 8px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-color: #fff;
+}
+
+/* タイトル共通 */
+.summary-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* 数字と単位のエリア */
+.summary-value {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 3px;
+    padding: 12px 8px 4px;
+    white-space: nowrap;
+}
+
+/* 数字 */
+.summary-number {
+    font-size: 40px;
+    font-weight: bold;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+}
+
+/* 単位 */
+.summary-unit {
+    font-size: 13px;
+    color: #666;
+}
+
+/* 補足 */
+.summary-note {
+    font-size: 15px;
+    color: #888;
+    text-align: center;
+    margin: 4px 8px 12px;
+}
+
+/* ① 依頼完了件数：青 */
+.summary-count {
+    border-color: #5689a6;
+}
+.summary-count .summary-label {
+    background-color: #5689a6;
+}
+.summary-count .summary-number {
+    color: #5689a6;
+}
+
+/* ② 合計金額：薄い青 */
+.summary-price {
+    border-color: rgb(234, 200, 38);
+}
+.summary-price .summary-label {
+    background-color: rgb(234, 200, 38);
+}
+.summary-price .summary-number {
+    color: rgb(234, 200, 38);
+}
+
+/* ③ 作業時間合計：グレー */
+.summary-time {
+    border-color: rgb(153, 153, 149);
+}
+.summary-time .summary-label {
+    background-color: rgb(153, 153, 149);
+}
+.summary-time .summary-number {
+    color: rgb(153, 153, 149);
+}
+	
+/*④作業時間平均*/
+.summary-average-days {
+	border-color: rgb(207, 162, 253);
+}
+.summary-average-days .summary-label {
+    background-color: rgb(207, 162, 253);
+}
+.summary-average-days .summary-number {
+    color: rgb(207, 162, 253);
+}
+
+
+
+
+
+/*②円グラフのCSS*/
+
+
+.chart-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px 0;
+    box-sizing: border-box;
+}
+
+.chart-item {
+    flex: 1 1 280px;
+    max-width: 300px;
+    min-width: 0;
+    padding: 16px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.chart-item h3 {
+    text-align: center;
+    margin: 0 0 16px;
+}
+
+/* 円グラフの描画領域を正方形にする */
+/*.chart-canvas {*/
+/*    position: relative;*/
+/*    width: 200px;*/
+/*	height: 200px; */
+/*    aspect-ratio: 1 / 1;*/
+/*}*/
+
+.chart-area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 130px;
+    gap: 16px;
+    align-items: start;
+    justify-content: start;
+    justify-items: start;
+	width: 100%;
+	   max-width: 800px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.chart-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    min-width: 0;
+    justify-self: start;
+}
+
+.chart-canvas {
+    position: relative;
+    width: 100%;
+    height: 220px;
+}
+
+.shared-legend {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-self: start;
+    gap: 10px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    border-radius: 2px;
+}
+
+@media (max-width: 800px) {
+    .chart-area {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-pair {
+        grid-template-columns: 1fr;
+    }
+
+    .shared-legend {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
+

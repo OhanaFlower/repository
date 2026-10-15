@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.MonthlySummaryDto;
+import com.example.demo.dto.RequestKindCountDto;
+import com.example.demo.dto.RequestKindPriceDto;
 import com.example.demo.dto.RequestListDto;
+import com.example.demo.dto.RequestPriceDto;
 import com.example.demo.dto.RequestSummaryDto;
 import com.example.demo.form.RequestForm;
 import com.example.demo.mapper.RequestMapper;
@@ -28,6 +31,19 @@ public class RequestService {
   public List<MonthlySummaryDto> getMonthlySummary(String period) {
 	    return requestMapper.selectMonthlySummary(period);
 	}
+  
+  //検索条件に一致する依頼情報の集計
+  public RequestSummaryDto selectSummaryByCondition(
+		  String period,
+		  String status,
+		  String clientName,
+		  String kind,
+		  String kindDetail,
+		  Integer minWorkTime) {
+
+   return requestMapper.selectSummaryByCondition(
+           period, status, clientName, kind, kindDetail, minWorkTime);
+}
   
   
   //②REQUESTSテーブル表示用
@@ -69,4 +85,61 @@ public class RequestService {
   public List<String> getClientNames() {
 	    return requestMapper.selectClientNames();
 	}
+  
+  //⑦表示・取得用：円グラフ取得・表示
+
+  // 依頼種類ごとの件数を取得
+  public List<RequestKindCountDto> selectKindCountByCondition(
+         String period,
+         String status,
+         String clientName,
+         String kind,
+         String kindDetail,
+         Integer minWorkTime) {
+
+     return requestMapper.selectKindCountByCondition(
+             period, status, clientName, kind, kindDetail, minWorkTime);
+ }
+
+
+ // 依頼1件ごとの金額を取得
+ public List<RequestPriceDto> selectPriceByCondition(
+         String period,
+         String status,
+         String clientName,
+         String kind,
+         String kindDetail,
+         Integer minWorkTime) {
+
+     return requestMapper.selectPriceByCondition(
+             period, status, clientName, kind, kindDetail, minWorkTime);
+ }
+
+
+public List<RequestKindPriceDto> selectKindPriceByCondition(
+        String period,
+        String status,
+        String clientName,
+        String kind,
+        String kindDetail,
+        Integer minWorkTime) {
+
+    return requestMapper.selectKindPriceByCondition(
+        period, status, clientName, kind, kindDetail, minWorkTime);
+}
+
+//⑧平均作業日数を取得
+public Double selectAverageWorkDaysByCondition(
+        String period,
+        String status,
+        String clientName,
+        String kind,
+        String kindDetail,
+        Integer minWorkTime) {
+
+    return requestMapper.selectAverageWorkDaysByCondition(
+        period, status, clientName, kind, kindDetail, minWorkTime);
+}
+
+
 }

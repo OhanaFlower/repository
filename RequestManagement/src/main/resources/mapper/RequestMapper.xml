@@ -19,6 +19,7 @@
 
 ⑪【取得用】SELECT文：グラフ使用用。金額と件数を取得。
 ⑫【取得用】SELECT文：依頼者リスト取得
+⑬【取得用】SQL:円グラフ取得・表示用(selectAllと同じ検索条件)
 -->
 
 
@@ -90,8 +91,8 @@
   
 </select>
 
-
-<!--③【表示用】SELECT文：受注日順に、REQUESTSテーブルを全て表示-->
+<!-- ③ 表示用
+：検索条件に応じて依頼一覧を表示 -->
 <select id="selectAllRequests"
         resultType="com.example.demo.dto.RequestListDto">
 
@@ -111,66 +112,126 @@
         TOTAL_WORK_TIME,
         MEMO
     FROM REQUESTS
-    
-    
-	<!--ここからソート用-->
-	<where>
-	<!--①状態: activeかcompletedで受け取って、範囲を指定-->
-	<if test="status == 'active'">
-		STATUS IN ('開始前', '制作中')
-	</if>
-	
-	 <if test="status == 'completed'">
-         STATUS = '完了'
-	</if>
-	
-	<!-- 新しい検索フォーム：実際の状態名で絞り込み -->
-	<if test="status == '開始前' or status == '制作中' or status == '完了'">
-    STATUS = #{status}
-</if>
-	
-	
-	<!--②期間 受け取ったもので範囲を指定-->
- 	<if test="period == 'today'">
-         COMPLETED_DAY >= CURRENT_DATE
-    </if>
 
-    <if test="period == 'week'">
-         COMPLETED_DAY >= CURRENT_DATE - INTERVAL '6 days'
-    </if>
+    <!-- 検索条件 -->
+    <where>
+        <!-- 状態 -->
+        <if test="status == 'active'">
+            STATUS IN ('開始前', '制作中')
+        </if>
+        <if test="status == 'completed'">
+            STATUS = '完了'
+        </if>
+        <if test="status == '開始前' or status == '制作中' or status == '完了'">
+            STATUS = #{status}
+        </if>
 
-    <if test="period == 'month'">
-         COMPLETED_DAY >= CURRENT_DATE - INTERVAL '29 days'
-    </if>
+        <!-- 期間 -->
+        <if test="period == 'today'">
+            COMPLETED_DAY >= CURRENT_DATE
+        </if>
+        <if test="period == 'week'">
+            COMPLETED_DAY >= CURRENT_DATE - INTERVAL '6 days'
+        </if>
+        <if test="period == 'month'">
+            COMPLETED_DAY >= CURRENT_DATE - INTERVAL '29 days'
+        </if>
+        <if test="period == 'year'">
+            COMPLETED_DAY >= CURRENT_DATE - INTERVAL '364 days'
+        </if>
 
-    <if test="period == 'year'">
-         COMPLETED_DAY >= CURRENT_DATE - INTERVAL '364 days'
-    </if>
-    
-    <!-- 依頼者 -->
-	<if test="clientName != null and clientName != ''">
-    	AND CLIENT_NAME = #{clientName}
-	</if>
+        <!-- 依頼者 -->
+        <if test="clientName != null and clientName != ''">
+            AND CLIENT_NAME = #{clientName}
+        </if>
 
-	<!-- 依頼種類 -->
-	<if test="kind != null and kind != ''">
- 	   AND KIND = #{kind}
-	</if>
-	
-	<if test="kindDetail != null and kindDetail != ''">
-       AND KIND_DETAIL = #{kindDetail}
-</if>
+        <!-- 依頼種類 -->
+        <if test="kind != null and kind != ''">
+            AND KIND = #{kind}
+        </if>
+        <if test="kindDetail != null and kindDetail != ''">
+            AND KIND_DETAIL = #{kindDetail}
+        </if>
 
-	<!-- 作業時間（指定分数以上） -->
-	<if test="minWorkTime != null">
- 	   AND TOTAL_WORK_TIME >= #{minWorkTime}
-	</if>
-    
-	</where>
-	
-	
+        <!-- 作業時間 -->
+        <if test="minWorkTime != null">
+            AND TOTAL_WORK_TIME >= #{minWorkTime}
+        </if>
+    </where>
+
     ORDER BY COMPLETED_DAY DESC NULLS LAST
+</select>
 
+
+<!-- ④ 表示用：検索条件に応じた集計 -->
+<select id="selectSummaryByCondition"
+        resultType="com.example.demo.dto.RequestSummaryDto">
+
+    SELECT
+        COUNT(STATUS) FILTER (
+            WHERE STATUS = '完了'
+        ) AS completed_count,
+
+        COUNT(STATUS) FILTER (
+            WHERE STATUS IN ('制作中', '開始前')
+        ) AS in_progress_count,
+
+        COALESCE(SUM(PRICE) FILTER (
+            WHERE STATUS = '完了'
+        ), 0) AS total_price,
+
+        COALESCE(SUM(TIP) FILTER (
+            WHERE STATUS = '完了'
+        ), 0) AS total_tip,
+
+        COALESCE(SUM(TOTAL_WORK_TIME), 0) AS total_work_time
+
+    FROM REQUESTS
+
+    <where>
+        <!-- 状態 -->
+        <if test="status == 'active'">
+            STATUS IN ('開始前', '制作中')
+        </if>
+        <if test="status == 'completed'">
+            STATUS = '完了'
+        </if>
+        <if test="status == '開始前' or status == '制作中' or status == '完了'">
+            STATUS = #{status}
+        </if>
+
+        <!-- 期間 -->
+        <if test="period == 'today'">
+            COMPLETED_DAY >= CURRENT_DATE
+        </if>
+        <if test="period == 'week'">
+            COMPLETED_DAY >= CURRENT_DATE - INTERVAL '6 days'
+        </if>
+        <if test="period == 'month'">
+            COMPLETED_DAY >= CURRENT_DATE - INTERVAL '29 days'
+        </if>
+        <if test="period == 'year'">
+            COMPLETED_DAY >= CURRENT_DATE - INTERVAL '364 days'
+        </if>
+
+        <!-- 依頼者 -->
+        <if test="clientName != null and clientName != ''">
+            AND CLIENT_NAME = #{clientName}
+        </if>
+
+        <!-- 依頼種類 -->
+        <if test="kind != null and kind != ''">
+            AND KIND = #{kind}
+        </if>
+        <if test="kindDetail != null and kindDetail != ''">
+            AND KIND_DETAIL = #{kindDetail}
+        </if>
+
+        <!-- 作業時間 -->
+        <if test="minWorkTime != null">
+            AND TOTAL_WORK_TIME >= #{minWorkTime}
+        </if>
+    </where>
 </select>
 
 
@@ -367,5 +428,133 @@ WHERE ID = #{id}
       AND CLIENT_NAME != ''
     ORDER BY CLIENT_NAME
 </select>
+
+
+
+<!--⑬【取得用】SQL:円グラフ取得・表示用(selectAllと同じ検索条件)-->
+
+<!-- 円グラフ共通：検索条件 -->
+<sql id="requestSearchConditions">
+
+    <!-- 状態 -->
+    <if test="status == 'active'">
+        AND STATUS IN ('開始前', '制作中')
+    </if>
+    <if test="status == 'completed'">
+        AND STATUS = '完了'
+    </if>
+    <if test="status == '開始前' or status == '制作中' or status == '完了'">
+        AND STATUS = #{status}
+    </if>
+
+    <!-- 期間（既存一覧と同じく完了日を基準にする） -->
+    <if test="period == 'today'">
+        AND COMPLETED_DAY &gt;= CURRENT_DATE
+    </if>
+    <if test="period == 'week'">
+        AND COMPLETED_DAY &gt;= CURRENT_DATE - INTERVAL '6 days'
+    </if>
+    <if test="period == 'month'">
+        AND COMPLETED_DAY &gt;= CURRENT_DATE - INTERVAL '29 days'
+    </if>
+    <if test="period == 'year'">
+        AND COMPLETED_DAY &gt;= CURRENT_DATE - INTERVAL '364 days'
+    </if>
+
+    <!-- 依頼者 -->
+    <if test="clientName != null and clientName != ''">
+        AND CLIENT_NAME = #{clientName}
+    </if>
+
+    <!-- 依頼種類 -->
+    <if test="kind != null and kind != ''">
+        AND KIND = #{kind}
+    </if>
+    <if test="kindDetail != null and kindDetail != ''">
+        AND KIND_DETAIL = #{kindDetail}
+    </if>
+
+    <!-- 作業時間 -->
+    <if test="minWorkTime != null">
+        AND TOTAL_WORK_TIME &gt;= #{minWorkTime}
+    </if>
+
+</sql>
+
+
+<!--円グラフ表示-->
+	
+<!-- 依頼種類ごとの件数 -->
+<select id="selectKindCountByCondition"
+        resultType="com.example.demo.dto.RequestKindCountDto">
+
+    SELECT
+        KIND AS kind,
+        COUNT(*) AS count
+    FROM REQUESTS
+
+    <where>
+        <include refid="requestSearchConditions"/>
+    </where>
+
+    GROUP BY KIND
+    ORDER BY COUNT(*) DESC
+
+</select>
+
+
+<!-- 依頼1件ごとの金額 -->
+<select id="selectPriceByCondition"
+        resultType="com.example.demo.dto.RequestPriceDto">
+
+    SELECT
+        ID AS id,
+        PRICE AS price
+    FROM REQUESTS
+
+    <where>
+        <include refid="requestSearchConditions"/>
+        AND PRICE IS NOT NULL
+        AND PRICE &gt; 0
+    </where>
+
+    ORDER BY ID
+
+</select>
+	
+
+<select id="selectKindPriceByCondition"
+        resultType="com.example.demo.dto.RequestKindPriceDto">
+    SELECT
+        KIND AS kind,
+        SUM(PRICE) AS totalPrice
+    FROM REQUESTS
+    <where>
+        <include refid="requestSearchConditions"/>
+        AND PRICE IS NOT NULL
+        AND PRICE > 0
+    </where>
+    GROUP BY KIND
+    ORDER BY SUM(PRICE) DESC
+</select>
+
+
+<!-- 平均作業日数：検索条件に一致する依頼 -->
+<select id="selectAverageWorkDaysByCondition"
+        resultType="java.lang.Double">
+
+    SELECT AVG(COMPLETED_DAY - START_DAY)
+    FROM REQUESTS
+
+    <where>
+        <include refid="requestSearchConditions"/>
+        AND START_DAY IS NOT NULL
+        AND COMPLETED_DAY IS NOT NULL
+        AND COMPLETED_DAY >= START_DAY
+    </where>
+
+</select>
+
+
 
 </mapper>

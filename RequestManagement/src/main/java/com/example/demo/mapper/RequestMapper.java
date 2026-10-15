@@ -5,7 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.dto.MonthlySummaryDto;
+import com.example.demo.dto.RequestKindCountDto;
+import com.example.demo.dto.RequestKindPriceDto;
 import com.example.demo.dto.RequestListDto;
+import com.example.demo.dto.RequestPriceDto;
 import com.example.demo.dto.RequestSummaryDto;
 import com.example.demo.form.RequestForm;
 
@@ -19,6 +22,16 @@ public interface RequestMapper {
 		
 		//月別データ（金額・依頼完了数）
 		List<MonthlySummaryDto> selectMonthlySummary(String period);
+		
+		// 依頼一覧：検索条件に応じた集計
+		RequestSummaryDto selectSummaryByCondition(
+		        String period,
+		        String status,
+		        String clientName,
+		        String kind,
+		        String kindDetail,
+		        Integer minWorkTime
+		);
 		
 	
 	//③「状態-status」の更新
@@ -58,6 +71,43 @@ public interface RequestMapper {
     
     //⑪取得用：依頼者リスト
     List<String> selectClientNames();
+    
+    //⑫表示用：円グラフ取得用
 
+    List<RequestKindCountDto> selectKindCountByCondition(
+    		String period,
+    		String status,
+    		String clientName,
+    		String kind,
+    		String kindDetail,
+    		Integer minWorkTime);
+
+    List<RequestPriceDto> selectPriceByCondition(
+    		String period,
+    		String status,
+    		String clientName,
+    		String kind,
+    		String kindDetail,
+    		Integer minWorkTime);
+    
+
+    List<RequestKindPriceDto> selectKindPriceByCondition(
+    		String period,
+    		String status,
+    		String clientName,
+    		String kind,
+    		String kindDetail,
+    		Integer minWorkTime);
+
+//⑬平均作業日数表示
+ // 平均作業日数：検索条件に一致する依頼
+    Double selectAverageWorkDaysByCondition(
+            String period,
+            String status,
+            String clientName,
+            String kind,
+            String kindDetail,
+            Integer minWorkTime
+    );
 
 }
