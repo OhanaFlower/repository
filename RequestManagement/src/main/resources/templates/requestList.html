@@ -182,17 +182,25 @@
 			<div class="summary-item summary-average-days">
 			    <div class="summary-label">平均作業日数</div>
 
-			    <div class="summary-value">
-			        <span class="summary-number"
-			              th:text="${averageWorkDays != null
-			                  ? #numbers.formatDecimal(averageWorkDays, 1, 1)
-			                  : '-'}"></span>
-			        <span class="summary-unit">日</span>
-			    </div>
 
-			    <div class="summary-note">
-			        開始日～完了日までの平均
-			    </div>
+				<div class="summary-value">
+				    <span class="summary-number"
+				          th:text="${workDaysSummary.averageWorkDays != null
+				              ? #numbers.formatDecimal(workDaysSummary.averageWorkDays, 1, 1)
+				              : '-'}"></span>
+				    <span class="summary-unit">日（平均）</span>
+				</div>
+
+				<div class="summary-note">
+				    最短：
+				    <span th:text="${workDaysSummary.minWorkDays != null
+				        ? workDaysSummary.minWorkDays : '-'}"></span>日
+				    ／
+				    最長：
+				    <span th:text="${workDaysSummary.maxWorkDays != null
+				        ? workDaysSummary.maxWorkDays : '-'}"></span>日
+				</div>
+
 			</div>
 
 

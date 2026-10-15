@@ -10,6 +10,7 @@ import com.example.demo.dto.RequestKindPriceDto;
 import com.example.demo.dto.RequestListDto;
 import com.example.demo.dto.RequestPriceDto;
 import com.example.demo.dto.RequestSummaryDto;
+import com.example.demo.dto.WorkDaysSummaryDto;
 import com.example.demo.form.RequestForm;
 import com.example.demo.mapper.RequestMapper;
 
@@ -129,16 +130,17 @@ public List<RequestKindPriceDto> selectKindPriceByCondition(
 }
 
 //⑧平均作業日数を取得
-public Double selectAverageWorkDaysByCondition(
-        String period,
-        String status,
-        String clientName,
-        String kind,
-        String kindDetail,
-        Integer minWorkTime) {
+//平均・最短・最長の作業日数を取得
+public WorkDaysSummaryDto selectAverageWorkDaysByCondition(
+     String period,
+     String status,
+     String clientName,
+     String kind,
+     String kindDetail,
+     Integer minWorkTime) {
 
-    return requestMapper.selectAverageWorkDaysByCondition(
-        period, status, clientName, kind, kindDetail, minWorkTime);
+ return requestMapper.selectAverageWorkDaysByCondition(
+     period, status, clientName, kind, kindDetail, minWorkTime);
 }
 
 

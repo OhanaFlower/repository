@@ -10,6 +10,7 @@ import com.example.demo.dto.RequestKindPriceDto;
 import com.example.demo.dto.RequestListDto;
 import com.example.demo.dto.RequestPriceDto;
 import com.example.demo.dto.RequestSummaryDto;
+import com.example.demo.dto.WorkDaysSummaryDto;
 import com.example.demo.form.RequestForm;
 
 @Mapper//JavaとSQLをつなぐ(myBatis)
@@ -100,8 +101,8 @@ public interface RequestMapper {
     		Integer minWorkTime);
 
 //⑬平均作業日数表示
- // 平均作業日数：検索条件に一致する依頼
-    Double selectAverageWorkDaysByCondition(
+ // 平均・最短・最長の作業日数
+    WorkDaysSummaryDto selectAverageWorkDaysByCondition(
             String period,
             String status,
             String clientName,

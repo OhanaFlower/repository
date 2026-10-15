@@ -14,6 +14,7 @@ import com.example.demo.dto.RequestKindPriceDto;
 import com.example.demo.dto.RequestListDto;
 import com.example.demo.dto.RequestPriceDto;
 import com.example.demo.dto.RequestSummaryDto;
+import com.example.demo.dto.WorkDaysSummaryDto;
 import com.example.demo.form.RequestForm;
 import com.example.demo.mapper.RequestMapper;
 import com.example.demo.mapper.WorkLogMapper;
@@ -187,10 +188,12 @@ public class RequestController {
 	  model.addAttribute("summary", summary);
 	
 	  //カード用：平均作業日数を取得する
-	  Double averageWorkDays = requestService.selectAverageWorkDaysByCondition(
-	      period, status, clientName, kind, kindDetail, minWorkTime);
+	  //Dto型を利用
+	  WorkDaysSummaryDto workDaysSummary =
+	      requestService.selectAverageWorkDaysByCondition(
+	          period, status, clientName, kind, kindDetail, minWorkTime);
 
-	  model.addAttribute("averageWorkDays", averageWorkDays);
+	  model.addAttribute("workDaysSummary", workDaysSummary);
 
 	  
 	  //

@@ -540,20 +540,23 @@ WHERE ID = #{id}
 
 
 <!-- 平均作業日数：検索条件に一致する依頼 -->
+
+<!-- 平均・最短・最長の作業日数：検索条件に一致する依頼 -->
 <select id="selectAverageWorkDaysByCondition"
-        resultType="java.lang.Double">
-
-    SELECT AVG(COMPLETED_DAY - START_DAY)
+        resultType="com.example.demo.dto.WorkDaysSummaryDto">
+    SELECT
+        AVG(COMPLETED_DAY - START_DAY) AS averageWorkDays,
+        MIN(COMPLETED_DAY - START_DAY) AS minWorkDays,
+        MAX(COMPLETED_DAY - START_DAY) AS maxWorkDays
     FROM REQUESTS
-
     <where>
         <include refid="requestSearchConditions"/>
         AND START_DAY IS NOT NULL
         AND COMPLETED_DAY IS NOT NULL
         AND COMPLETED_DAY >= START_DAY
     </where>
-
 </select>
+
 
 
 
