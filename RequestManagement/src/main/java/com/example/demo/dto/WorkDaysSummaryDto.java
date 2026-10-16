@@ -7,4 +7,6 @@ public class WorkDaysSummaryDto {
     private Double averageWorkDays;
     private Integer minWorkDays;
     private Integer maxWorkDays;
+    
+    private Integer workDaysCount;//null防止
 }

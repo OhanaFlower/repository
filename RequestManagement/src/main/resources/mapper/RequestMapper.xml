@@ -547,7 +547,8 @@ WHERE ID = #{id}
     SELECT
         AVG(COMPLETED_DAY - START_DAY) AS averageWorkDays,
         MIN(COMPLETED_DAY - START_DAY) AS minWorkDays,
-        MAX(COMPLETED_DAY - START_DAY) AS maxWorkDays
+        MAX(COMPLETED_DAY - START_DAY) AS maxWorkDays,
+        COUNT(COMPLETED_DAY - START_DAY) AS workDaysCount
     FROM REQUESTS
     <where>
         <include refid="requestSearchConditions"/>

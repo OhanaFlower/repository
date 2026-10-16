@@ -194,6 +194,7 @@ public class RequestController {
 	          period, status, clientName, kind, kindDetail, minWorkTime);
 
 	  model.addAttribute("workDaysSummary", workDaysSummary);
+	  System.out.println("workDaysSummary = " + workDaysSummary);
 
 	  
 	  //
