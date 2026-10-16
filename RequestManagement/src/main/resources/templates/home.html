@@ -251,6 +251,9 @@
 					    borderColor: '#94adda',
 					    borderWidth: 5,
 					    yAxisID: 'count',
+						pointRadius: 5,
+						pointHoverRadius: 8,
+						pointHitRadius: 12,
 						
 					}
 				]
@@ -259,7 +262,9 @@
 			options: {
 			    responsive: true,
 				maintainAspectRatio: false,
-
+				devicePixelRatio: 1,
+				
+				
 			    scales: {
 					price: {
 					    type: 'linear',
@@ -274,7 +279,27 @@
 					        stepSize: 1
 					    }
 					}
-			    }
+			    },
+				plugins: {
+				    legend: {
+				        labels: {
+				            font: {
+				                size: 14
+				            }
+				        }
+				    },
+				    tooltip: {
+				        titleFont: {
+				            size: 14
+				        },
+				        bodyFont: {
+				            size: 14
+				        },
+				        footerFont: {
+				            size: 13
+				        }
+				    }
+				}
 			}
 
 	    });
